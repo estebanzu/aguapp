@@ -4,7 +4,6 @@ import { speak } from "../utils/speech";
 import { playClick } from "../utils/sound";
 import { cargarProgreso } from "../utils/storage";
 import Mascot from "../components/Mascot";
-import ProgressBar from "../components/ProgressBar";
 import Dashboard from "../components/Dashboard";
 
 const sections = [
@@ -39,10 +38,10 @@ const sections = [
     to: "/formas",
     labelFr: "Formes",
     labelEs: "Formas",
-    emoji: "📐",
+    emoji: "🔷",
     color: "from-pink-400 to-rose-400",
     shadow: "shadow-pink-200",
-    masteryKey: null,
+    masteryKey: "formas",
   },
   {
     to: "/contar",
@@ -60,6 +59,60 @@ const sections = [
     emoji: "🎯",
     color: "from-indigo-400 to-blue-400",
     shadow: "shadow-indigo-200",
+    masteryKey: null,
+  },
+  {
+    to: "/motifs",
+    labelFr: "Motifs",
+    labelEs: "Motivos",
+    emoji: "🔴",
+    color: "from-violet-400 to-purple-400",
+    shadow: "shadow-violet-200",
+    masteryKey: "motifs",
+  },
+  {
+    to: "/grandeurs",
+    labelFr: "Grandeurs",
+    labelEs: "Tamaños",
+    emoji: "📏",
+    color: "from-orange-400 to-amber-400",
+    shadow: "shadow-orange-200",
+    masteryKey: "grandeurs",
+  },
+  {
+    to: "/vocabulaire",
+    labelFr: "Vocabulaire",
+    labelEs: "Vocabulario",
+    emoji: "📚",
+    color: "from-rose-400 to-pink-400",
+    shadow: "shadow-rose-200",
+    masteryKey: "vocabulaire",
+  },
+  {
+    to: "/problemes",
+    labelFr: "Problèmes",
+    labelEs: "Problemas",
+    emoji: "➕",
+    color: "from-emerald-400 to-teal-400",
+    shadow: "shadow-emerald-200",
+    masteryKey: "problemes",
+  },
+  {
+    to: "/comptines",
+    labelFr: "Comptines",
+    labelEs: "Canciones",
+    emoji: "🎵",
+    color: "from-purple-400 to-violet-400",
+    shadow: "shadow-purple-200",
+    masteryKey: "comptines",
+  },
+  {
+    to: "/defi",
+    labelFr: "Défi du jour",
+    labelEs: "Reto del día",
+    emoji: "⭐",
+    color: "from-yellow-400 to-orange-400",
+    shadow: "shadow-yellow-200",
     masteryKey: null,
   },
 ];
@@ -100,32 +153,30 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12">
+    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-8">
       {showDashboard && <Dashboard onClose={() => setShowDashboard(false)} />}
 
-      <div className="animate-bounce-in mb-4">
-        <button
-          onClick={handleLogoTap}
-          className="w-24 h-24 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg shadow-yellow-200 animate-glow active:scale-95 transition-transform"
-        >
-          <span className="text-5xl font-display font-black">A</span>
-        </button>
-      </div>
+      <button
+        onClick={handleLogoTap}
+        className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg shadow-yellow-200 animate-glow active:scale-95 transition-transform mb-3"
+      >
+        <span className="text-4xl font-display font-black">A</span>
+      </button>
 
       <h1
-        className="font-display text-4xl font-black text-center text-gray-800 mb-1 animate-bounce-in"
+        className="font-display text-3xl font-black text-center text-gray-800 mb-0.5 animate-bounce-in"
         style={{ animationDelay: "0.2s" }}
       >
         Apprendre avec
       </h1>
       <h1
-        className="font-display text-5xl font-black text-center text-amber-600 mb-2 animate-bounce-in"
+        className="font-display text-4xl font-black text-center text-amber-600 mb-2 animate-bounce-in"
         style={{ animationDelay: "0.3s" }}
       >
         Agus
       </h1>
       <p
-        className="font-body text-lg text-gray-500 mb-4 text-center animate-bounce-in"
+        className="font-body text-sm text-gray-500 mb-3 text-center animate-bounce-in"
         style={{ animationDelay: "0.4s" }}
       >
         Apprends en français et en espagnol !
@@ -133,17 +184,16 @@ export default function Home() {
 
       {showMascot && (
         <div
-          className="mb-6 animate-bounce-in"
+          className="mb-4 animate-bounce-in"
           style={{ animationDelay: "0.45s" }}
         >
           <Mascot message="welcome" size="sm" />
         </div>
       )}
 
-      {/* Streak */}
       {(perfil.currentStreak || 0) > 0 && (
         <div
-          className="mb-4 px-4 py-2 bg-orange-50 rounded-full border border-orange-200 animate-bounce-in"
+          className="mb-3 px-4 py-1.5 bg-orange-50 rounded-full border border-orange-200 animate-bounce-in"
           style={{ animationDelay: "0.5s" }}
         >
           <span className="font-display text-sm font-bold text-orange-600">
@@ -153,8 +203,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* Sections grid */}
-      <div className="grid grid-cols-2 gap-4 w-full max-w-md mb-6">
+      <div className="grid grid-cols-3 gap-3 w-full max-w-md mb-4">
         {sections.map((section, index) => {
           const mastery = section.masteryKey
             ? calculateMastery(section.masteryKey)
@@ -164,25 +213,18 @@ export default function Home() {
               key={section.to}
               to={section.to}
               onClick={() => playClick()}
-              className={`
-                animate-bounce-in
-                bg-gradient-to-r ${section.color}
-                text-white font-display font-bold text-lg
-                py-5 px-4 rounded-3xl
-                flex flex-col items-center gap-2
-                shadow-xl ${section.shadow}
-                hover:scale-105 active:scale-95
-                transition-transform duration-200
-              `}
-              style={{ animationDelay: `${0.55 + index * 0.1}s` }}
+              className={`animate-bounce-in bg-gradient-to-r ${section.color} text-white font-display font-bold text-sm py-4 px-2 rounded-2xl flex flex-col items-center gap-1 shadow-lg ${section.shadow} hover:scale-105 active:scale-95 transition-transform duration-200`}
+              style={{ animationDelay: `${0.55 + index * 0.07}s` }}
             >
-              <span className="text-3xl">{section.emoji}</span>
-              <span>{section.labelFr}</span>
-              <span className="text-xs opacity-80">{section.labelEs}</span>
+              <span className="text-2xl">{section.emoji}</span>
+              <span className="leading-tight">{section.labelFr}</span>
+              <span className="text-[10px] opacity-80 leading-tight">
+                {section.labelEs}
+              </span>
               {mastery !== null && mastery > 0 && (
-                <div className="w-full bg-white/30 rounded-full h-1.5 mt-1">
+                <div className="w-full bg-white/30 rounded-full h-1 mt-0.5">
                   <div
-                    className="bg-white rounded-full h-1.5 transition-all"
+                    className="bg-white rounded-full h-1 transition-all"
                     style={{ width: `${mastery}%` }}
                   />
                 </div>
@@ -192,7 +234,7 @@ export default function Home() {
         })}
       </div>
 
-      <p className="font-body text-xs text-gray-400 text-center">
+      <p className="font-body text-[10px] text-gray-400 text-center">
         Touche le logo 5 fois pour les paramètres parents 👆
       </p>
     </div>

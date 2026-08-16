@@ -5,7 +5,68 @@ import {
   obtenerConceptosDebiles,
 } from "../utils/storage";
 import ProgressBar from "./ProgressBar";
-import { playClick } from "../utils/sound";
+import { playClick, playWhoosh } from "../utils/sound";
+
+const allSections = [
+  { key: "colors", fr: "Couleurs", es: "Colores", emoji: "🎨", color: "blue" },
+  { key: "numbers", fr: "Nombres", es: "Números", emoji: "🔢", color: "green" },
+  { key: "bodyParts", fr: "Corps", es: "Cuerpo", emoji: "🧍", color: "orange" },
+  { key: "formas", fr: "Formas", es: "Formas", emoji: "🔷", color: "purple" },
+  { key: "motifs", fr: "Motifs", es: "Motivos", emoji: "🔴", color: "pink" },
+  {
+    key: "grandeurs",
+    fr: "Grandeurs",
+    es: "Tamaños",
+    emoji: "📏",
+    color: "amber",
+  },
+  {
+    key: "vocabulaire",
+    fr: "Vocabulaire",
+    es: "Vocabulario",
+    emoji: "📚",
+    color: "rose",
+  },
+  {
+    key: "problemes",
+    fr: "Problèmes",
+    es: "Problemas",
+    emoji: "➕",
+    color: "emerald",
+  },
+  {
+    key: "comptines",
+    fr: "Comptines",
+    es: "Canciones",
+    emoji: "🎵",
+    color: "violet",
+  },
+];
+
+function MiniChart({ value, label, color }) {
+  const colors = {
+    blue: "bg-blue-400",
+    green: "bg-green-400",
+    orange: "bg-orange-400",
+    purple: "bg-purple-400",
+    pink: "bg-pink-400",
+    amber: "bg-amber-400",
+    rose: "bg-rose-400",
+    emerald: "bg-emerald-400",
+    violet: "bg-violet-400",
+  };
+  return (
+    <div className="flex flex-col items-center">
+      <div className="w-10 h-24 bg-gray-100 rounded-full overflow-hidden relative">
+        <div
+          className={`absolute bottom-0 w-full rounded-full transition-all duration-500 ${colors[color]}`}
+          style={{ height: `${Math.min(value, 100)}%` }}
+        />
+      </div>
+      <span className="text-xs mt-1 text-gray-500">{Math.round(value)}%</span>
+    </div>
+  );
+}
 
 export default function Dashboard({ onClose }) {
   const [perfil, setPerfil] = useState(() => cargarProgreso());
@@ -38,11 +99,9 @@ export default function Dashboard({ onClose }) {
     return avg * 100;
   };
 
-  const sections = [
-    { key: "colors", fr: "Couleurs", es: "Colores", emoji: "🎨" },
-    { key: "numbers", fr: "Nombres", es: "Números", emoji: "🔢" },
-    { key: "bodyParts", fr: "Corps", es: "Cuerpo", emoji: "🧍" },
-  ];
+  const totalMastery =
+    allSections.reduce((sum, s) => sum + calculateMastery(s.key), 0) /
+    allSections.length;
 
   return (
     <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
@@ -72,28 +131,63 @@ export default function Dashboard({ onClose }) {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="bg-blue-50 rounded-2xl p-4 text-center">
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="bg-blue-50 rounded-2xl p-3 text-center">
               <p className="font-display text-2xl font-black text-blue-600">
                 {perfil.totalSessions || 0}
               </p>
               <p className="font-body text-xs text-blue-500">Sessions</p>
             </div>
-            <div className="bg-orange-50 rounded-2xl p-4 text-center">
+            <div className="bg-orange-50 rounded-2xl p-3 text-center">
               <p className="font-display text-2xl font-black text-orange-600">
                 🔥 {perfil.currentStreak || 0}
               </p>
-              <p className="font-body text-xs text-orange-500">Streak jours</p>
+              <p className="font-body text-xs text-orange-500">Streak</p>
+            </div>
+            <div className="bg-green-50 rounded-2xl p-3 text-center">
+              <p className="font-display text-2xl font-black text-green-600">
+                {Math.round(totalMastery)}%
+              </p>
+              <p className="font-body text-xs text-green-500">Global</p>
+            </div>
+          </div>
+
+          {/* Mini bar chart */}
+          <div className="mb-6">
+            <h3 className="font-display text-sm font-bold text-gray-500 mb-3">
+              📊 Progression
+            </h3>
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <div className="flex items-end justify-between gap-2">
+                {allSections.map((s) => (
+                  <MiniChart
+                    key={s.key}
+                    value={calculateMastery(s.key)}
+                    label={s.fr}
+                    color={s.color}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-between mt-2">
+                {allSections.map((s) => (
+                  <span
+                    key={s.key}
+                    className="text-xs text-gray-400 w-6 text-center truncate"
+                  >
+                    {s.emoji}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Progress per section */}
           <div className="mb-6">
             <h3 className="font-display text-sm font-bold text-gray-500 mb-3">
-              📊 Progrès
+              📋 Détails
             </h3>
-            <div className="space-y-3">
-              {sections.map((s) => (
+            <div className="space-y-2">
+              {allSections.map((s) => (
                 <ProgressBar
                   key={s.key}
                   value={calculateMastery(s.key)}
@@ -129,6 +223,38 @@ export default function Dashboard({ onClose }) {
               </div>
             </div>
           )}
+
+          {/* Recommendations */}
+          <div className="mb-6">
+            <h3 className="font-display text-sm font-bold text-gray-500 mb-3">
+              💡 Recommandations
+            </h3>
+            <div className="space-y-2">
+              {allSections
+                .filter((s) => calculateMastery(s.key) < 50)
+                .slice(0, 3)
+                .map((s) => (
+                  <div
+                    key={s.key}
+                    className="flex items-center gap-3 bg-amber-50 rounded-xl p-3"
+                  >
+                    <span className="text-xl">{s.emoji}</span>
+                    <p className="font-body text-sm text-gray-700">
+                      Continue à pratiquer <strong>{s.fr}</strong> (
+                      {Math.round(calculateMastery(s.key))}%)
+                    </p>
+                  </div>
+                ))}
+              {allSections.every((s) => calculateMastery(s.key) >= 50) && (
+                <div className="flex items-center gap-3 bg-green-50 rounded-xl p-3">
+                  <span className="text-xl">🌟</span>
+                  <p className="font-body text-sm text-gray-700">
+                    Excellent ! Tous les modules sont bien maîtrisés.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
 
           {/* Settings */}
           <div className="space-y-4">
