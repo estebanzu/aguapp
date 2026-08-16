@@ -1,8 +1,8 @@
-const STORAGE_KEY = "agus-progress";
+const STORAGE_KEY = "petit-monde-progress";
 
 function crearPerfilInicial() {
   return {
-    name: "Agus",
+    name: "Petit Monde",
     age: 4,
     startDate: new Date().toISOString(),
     concepts: {

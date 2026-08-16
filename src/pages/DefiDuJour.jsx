@@ -83,7 +83,7 @@ export default function DefiDuJour() {
       const progress = cargarProgreso();
       progress.defiDate = new Date().toISOString().slice(0, 10);
       progress.defiStreak = (progress.defiStreak || 0) + 1;
-      localStorage.setItem("agus-progress", JSON.stringify(progress));
+      localStorage.setItem("petit-monde-progress", JSON.stringify(progress));
     } else {
       playError();
       setShowResult("wrong");

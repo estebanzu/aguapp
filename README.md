@@ -1,21 +1,19 @@
-# Agus App
+# Petit Monde
 
-**"Apprendre avec Agus"** — Because apparently the iPad needed another app for a 4-year-old.
+**"Petit Monde"** — Because apparently the iPad needed another app for a 4-year-old.
 
 ---
 
 ## What is this?
 
-A bilingual (French/Spanish) educational app designed for one very specific child named Agus, who is 4 years old and attending Maternelle in France. It teaches colors, numbers, body parts, shapes, counting, and color classification — through interactive quizzes and a bear mascot that won't stop talking.
-
-If your name isn't Agus, you can still use it. We don't judge.
+A bilingual (French/Spanish) educational app designed for children learning through interactive play. It teaches colors, numbers, body parts, shapes, counting, and color classification — through interactive quizzes and a friendly bear mascot that won't stop talking.
 
 ## Features
 
-- **Bilingual TTS** — Speaks French first, then Spanish, because why learn one language when you can traumatize a child with two
-- **Interactive SVG body** — Tap on body parts to hear their names. Very educational. Slightly unsettling out of context.
+- **Bilingual TTS** — Speaks French first, then Spanish, because why learn one language when you can learn two
+- **Interactive SVG body** — Tap on body parts to hear their names. Very educational.
 - **Quiz mode** — Shuffle questions, reward correct answers with confetti, punish wrong ones with a sad sound
-- **Progress tracking** — localStorage, because a 4-year-old doesn't have a database
+- **Progress tracking** — localStorage, because young children don't have databases
 - **Streak counter** — Daily streaks. We're building habits early.
 - **Parent dashboard** — Hidden behind 5 secret taps on the logo. Because toddlers will tap anything.
 - **Sound effects** — All synthesized with Web Audio API. No external assets. Very professional beeps.

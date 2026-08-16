@@ -10,7 +10,7 @@ const LANGUAGES = {
 export function LanguageProvider({ children }) {
   const [lang, setLang] = useState(() => {
     try {
-      return localStorage.getItem("agus-lang") || "fr";
+      return localStorage.getItem("petit-monde-lang") || "fr";
     } catch {
       return "fr";
     }
@@ -18,7 +18,7 @@ export function LanguageProvider({ children }) {
 
   useEffect(() => {
     try {
-      localStorage.setItem("agus-lang", lang);
+      localStorage.setItem("petit-monde-lang", lang);
     } catch {}
   }, [lang]);
 

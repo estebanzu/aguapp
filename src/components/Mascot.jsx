@@ -45,35 +45,35 @@ export default function Mascot({
       >
         <svg viewBox="0 0 120 120" className="w-full h-full">
           {/* Body */}
-          <ellipse cx="60" cy="70" rx="35" ry="40" fill="#8B6F47" />
+          <ellipse cx="60" cy="70" rx="35" ry="40" fill="#C4A77D" />
           {/* Belly */}
-          <ellipse cx="60" cy="75" rx="22" ry="25" fill="#C4A77D" />
+          <ellipse cx="60" cy="75" rx="22" ry="25" fill="#E8DCC8" />
           {/* Head */}
-          <circle cx="60" cy="38" r="28" fill="#8B6F47" />
+          <circle cx="60" cy="38" r="28" fill="#C4A77D" />
           {/* Ears */}
-          <ellipse cx="35" cy="18" rx="10" ry="14" fill="#8B6F47" />
-          <ellipse cx="35" cy="18" rx="6" ry="10" fill="#C4A77D" />
-          <ellipse cx="85" cy="18" rx="10" ry="14" fill="#8B6F47" />
-          <ellipse cx="85" cy="18" rx="6" ry="10" fill="#C4A77D" />
+          <ellipse cx="35" cy="18" rx="10" ry="14" fill="#C4A77D" />
+          <ellipse cx="35" cy="18" rx="6" ry="10" fill="#D4A5A5" />
+          <ellipse cx="85" cy="18" rx="10" ry="14" fill="#C4A77D" />
+          <ellipse cx="85" cy="18" rx="6" ry="10" fill="#D4A5A5" />
           {/* Eyes */}
           <circle cx="48" cy="35" r="5" fill="white" />
           <circle cx="72" cy="35" r="5" fill="white" />
-          <circle cx="49" cy="36" r="3" fill="#1a1a1a" />
-          <circle cx="73" cy="36" r="3" fill="#1a1a1a" />
+          <circle cx="49" cy="36" r="3" fill="#4A4A4A" />
+          <circle cx="73" cy="36" r="3" fill="#4A4A4A" />
           <circle cx="50" cy="35" r="1" fill="white" />
           <circle cx="74" cy="35" r="1" fill="white" />
           {/* Nose */}
-          <ellipse cx="60" cy="43" rx="4" ry="3" fill="#1a1a1a" />
+          <ellipse cx="60" cy="43" rx="4" ry="3" fill="#4A4A4A" />
           {/* Mouth */}
           <path
             d="M 52 48 Q 60 54 68 48"
             fill="none"
-            stroke="#1a1a1a"
+            stroke="#4A4A4A"
             strokeWidth="1.5"
           />
           {/* Cheeks */}
-          <circle cx="40" cy="45" r="5" fill="#FFB5B5" opacity="0.6" />
-          <circle cx="80" cy="45" r="5" fill="#FFB5B5" opacity="0.6" />
+          <circle cx="40" cy="45" r="5" fill="#D4A5A5" opacity="0.5" />
+          <circle cx="80" cy="45" r="5" fill="#D4A5A5" opacity="0.5" />
           {/* Arms */}
           <g
             className={
@@ -87,7 +87,7 @@ export default function Mascot({
               cy="68"
               rx="8"
               ry="14"
-              fill="#8B6F47"
+              fill="#C4A77D"
               transform="rotate(-15 28 68)"
             />
           </g>
@@ -96,12 +96,12 @@ export default function Mascot({
             cy="68"
             rx="8"
             ry="14"
-            fill="#8B6F47"
+            fill="#C4A77D"
             transform="rotate(15 92 68)"
           />
           {/* Feet */}
-          <ellipse cx="45" cy="108" rx="12" ry="7" fill="#8B6F47" />
-          <ellipse cx="75" cy="108" rx="12" ry="7" fill="#8B6F47" />
+          <ellipse cx="45" cy="108" rx="12" ry="7" fill="#C4A77D" />
+          <ellipse cx="75" cy="108" rx="12" ry="7" fill="#C4A77D" />
         </svg>
       </div>
       {currentMsg && (

@@ -1,8 +1,32 @@
 # Changelog
 
-All notable changes to **Agus App** will be documented in this file.
+All notable changes to **Petit Monde** will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) (sort of — Agus is 4, not a semver expert).
+
+---
+
+## [1.1.0] - 2026-08-16
+
+### Added
+- **Petit Monde branding** — New name, logo, and color palette
+- **SVG logo** — Bear sitting on a book with floating educational icons
+- **New color palette** — Muted, calming colors designed for focus:
+  - Cream (#FFFDF7) - Background
+  - Sage (#B8C9A3) - Secondary
+  - Dusty Rose (#D4A5A5) - Accents
+  - Warm Sand (#E8DCC8) - Borders
+  - Charcoal (#4A4A4A) - Text
+  - Muted Blue (#7BA7BC) - Interactive elements
+  - Terracotta (#C9886E) - Active states
+  - Pale Gold (#E8C97A) - Rewards
+  - Lavender (#C9A9D4) - Creative elements
+
+### Changed
+- **App name** — Renamed from "Apprendre avec Agus" to "Petit Monde"
+- **Mascot colors** — Updated to match new palette
+- **All component colors** — Updated to use muted, child-friendly colors
+- **localStorage keys** — Updated to "petit-monde-*" prefix
 
 ---
 

@@ -45,25 +45,25 @@ const allSections = [
 
 function MiniChart({ value, label, color }) {
   const colors = {
-    blue: "bg-blue-400",
-    green: "bg-green-400",
-    orange: "bg-orange-400",
-    purple: "bg-purple-400",
-    pink: "bg-pink-400",
-    amber: "bg-amber-400",
-    rose: "bg-rose-400",
-    emerald: "bg-emerald-400",
-    violet: "bg-violet-400",
+    blue: "bg-muted-blue",
+    green: "bg-sage",
+    orange: "bg-muted-terracotta",
+    purple: "bg-muted-lavender",
+    pink: "bg-rose",
+    amber: "bg-muted-gold",
+    rose: "bg-rose",
+    emerald: "bg-sage",
+    violet: "bg-muted-lavender",
   };
   return (
     <div className="flex flex-col items-center">
-      <div className="w-10 h-24 bg-gray-100 rounded-full overflow-hidden relative">
+      <div className="w-10 h-24 bg-sand/50 rounded-full overflow-hidden relative">
         <div
           className={`absolute bottom-0 w-full rounded-full transition-all duration-500 ${colors[color]}`}
           style={{ height: `${Math.min(value, 100)}%` }}
         />
       </div>
-      <span className="text-xs mt-1 text-gray-500">{Math.round(value)}%</span>
+      <span className="text-xs mt-1 text-charcoal/50">{Math.round(value)}%</span>
     </div>
   );
 }
@@ -73,7 +73,7 @@ export default function Dashboard({ onClose }) {
   const [settings, setSettings] = useState(() => {
     try {
       return (
-        JSON.parse(localStorage.getItem("agus-settings")) || {
+        JSON.parse(localStorage.getItem("petit-monde-settings")) || {
           maxMinutes: 15,
           soloExplorar: false,
           language: "both",
@@ -85,7 +85,7 @@ export default function Dashboard({ onClose }) {
   });
 
   useEffect(() => {
-    localStorage.setItem("agus-settings", JSON.stringify(settings));
+    localStorage.setItem("petit-monde-settings", JSON.stringify(settings));
   }, [settings]);
 
   const debiles = obtenerConceptosDebiles(perfil);
