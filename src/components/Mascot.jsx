@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 
 const messages = {
   welcome: {
-    fr: "Bonjour ! On apprend ensemble ?",
-    es: "¡Hola! ¿Aprendemos juntos?",
+    fr: "Bonjour ! Bienvenue dans Petit Monde !",
+    es: "¡Hola ! Bienvenido a Petit Monde !",
   },
   explore: { fr: "Touche pour écouter !", es: "¡Toca para escuchar!" },
   quiz: { fr: "Prêt pour le défi ?", es: "¿Listo para el desafío?" },
@@ -105,12 +105,12 @@ export default function Mascot({
         </svg>
       </div>
       {currentMsg && (
-        <div className="bg-white rounded-2xl px-4 py-2 shadow-md border border-gray-100 max-w-[200px] text-center relative animate-pop">
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-gray-100 rotate-45" />
-          <p className="font-display text-xs font-bold text-gray-700 relative z-10">
+        <div className="bg-cream rounded-2xl px-4 py-2 shadow-md border border-sand/50 max-w-[200px] text-center relative animate-pop">
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-cream border-l border-t border-sand/50 rotate-45" />
+          <p className="font-display text-xs font-bold text-charcoal relative z-10">
             {currentMsg.fr}
           </p>
-          <p className="font-body text-[10px] text-gray-400 relative z-10">
+          <p className="font-body text-[10px] text-charcoal/50 relative z-10">
             {currentMsg.es}
           </p>
         </div>

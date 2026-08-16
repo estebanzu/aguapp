@@ -115,7 +115,7 @@ export default function Layout({ children }) {
       <LanguageSelector />
       <main className="flex-1 pb-20 overflow-y-auto">{children}</main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-100 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-sand/50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)] z-50">
         <div className="max-w-lg mx-auto flex justify-around items-center py-1.5">
           {navItems.map((item) => (
             <NavLink
@@ -125,8 +125,8 @@ export default function Layout({ children }) {
               className={({ isActive }) =>
                 `flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all duration-200 ${
                   isActive
-                    ? "text-blue-500 scale-110 bg-blue-50"
-                    : "text-gray-400 hover:text-gray-600 hover:bg-gray-50"
+                    ? 'text-muted-blue scale-110 bg-muted-blue/10'
+                    : 'text-charcoal/40 hover:text-charcoal/60 hover:bg-sand/30'
                 }`
               }
             >
