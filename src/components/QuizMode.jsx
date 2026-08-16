@@ -1,10 +1,17 @@
-import { useState, useEffect, useCallback } from 'react';
-import { speak, speakExcited } from '../utils/speech';
-import { shuffleArray } from '../utils/animations';
-import { playSuccess, playError, playCelebration } from '../utils/sound';
+import { useState, useEffect, useCallback } from "react";
+import { speak, speakExcited } from "../utils/speech";
+import { shuffleArray } from "../utils/animations";
+import { playSuccess, playError, playCelebration } from "../utils/sound";
 
 function Confetti() {
-  const colors = ['#EF4444', '#22C55E', '#3B82F6', '#EAB308', '#F97316', '#A855F7'];
+  const colors = [
+    "#EF4444",
+    "#22C55E",
+    "#3B82F6",
+    "#EAB308",
+    "#F97316",
+    "#A855F7",
+  ];
   const pieces = Array.from({ length: 30 }, (_, i) => ({
     id: i,
     color: colors[i % colors.length],
@@ -22,11 +29,11 @@ function Confetti() {
           className="absolute animate-confetti"
           style={{
             left: `${p.left}%`,
-            top: '-10px',
+            top: "-10px",
             width: `${p.size}px`,
             height: `${p.size}px`,
             backgroundColor: p.color,
-            borderRadius: p.size % 2 === 0 ? '50%' : '2px',
+            borderRadius: p.size % 2 === 0 ? "50%" : "2px",
             animationDelay: `${p.delay}s`,
             transform: `rotate(${p.rotation}deg)`,
           }}
@@ -70,9 +77,9 @@ export default function QuizMode({
 
   const askQuestion = useCallback(() => {
     if (!currentQuestion) return;
-    speak(currentQuestion.questionFr, 'fr-FR');
+    speak(currentQuestion.questionFr, "fr-FR");
     setTimeout(() => {
-      speak(currentQuestion.questionEs, 'es-ES');
+      speak(currentQuestion.questionEs, "es-ES");
     }, 1200);
   }, [currentQuestion]);
 
@@ -87,7 +94,7 @@ export default function QuizMode({
     setWrongAttempts(0);
     setShowCorrectHint(false);
     if (currentIndex + 1 < shuffled.length) {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev) => prev + 1);
       setFeedback(null);
     } else {
       setShowConfetti(true);
@@ -99,18 +106,19 @@ export default function QuizMode({
   const handleAnswer = (answerId) => {
     if (isWaiting || isComplete) return;
 
-    const isCorrect = answerId === currentQuestion.correctId ||
+    const isCorrect =
+      answerId === currentQuestion.correctId ||
       answerId === currentQuestion.correctNum;
 
     if (isCorrect) {
       const newScore = score + 1;
       setScore(newScore);
-      setFeedback({ type: 'correct', text: currentQuestion.feedbackFr });
+      setFeedback({ type: "correct", text: currentQuestion.feedbackFr });
       playSuccess();
 
-      speakExcited(currentQuestion.feedbackFr, 'fr-FR');
+      speakExcited(currentQuestion.feedbackFr, "fr-FR");
       setTimeout(() => {
-        speakExcited(currentQuestion.feedbackEs, 'es-ES');
+        speakExcited(currentQuestion.feedbackEs, "es-ES");
       }, 1000);
 
       onCorrectFeedback?.();
@@ -125,9 +133,9 @@ export default function QuizMode({
 
       if (newWrongCount >= 2) {
         setShowCorrectHint(true);
-        speak('Regarde ! C\'est celui-ci !', 'fr-FR');
+        speak("Regarde ! C'est celui-ci !", "fr-FR");
         setTimeout(() => {
-          speak('¡Mira! ¡Es este!', 'es-ES');
+          speak("¡Mira! ¡Es este!", "es-ES");
         }, 1000);
 
         setTimeout(() => {
@@ -137,17 +145,17 @@ export default function QuizMode({
           advanceQuestion();
         }, 3000);
       } else {
-        speak('Essaie encore !', 'fr-FR');
+        speak("Essaie encore !", "fr-FR");
         setTimeout(() => {
-          speak('¡Inténtalo de nuevo!', 'es-ES');
+          speak("¡Inténtalo de nuevo!", "es-ES");
         }, 800);
 
         setTimeout(() => {
           setSelectedWrong(null);
           setIsWaiting(false);
-          speak(currentQuestion.questionFr, 'fr-FR');
+          speak(currentQuestion.questionFr, "fr-FR");
           setTimeout(() => {
-            speak(currentQuestion.questionEs, 'es-ES');
+            speak(currentQuestion.questionEs, "es-ES");
           }, 1200);
         }, 2000);
       }
@@ -181,15 +189,19 @@ export default function QuizMode({
             </p>
             <p className="font-display text-xl font-bold text-gray-700 mt-2">
               {score === shuffled.length
-                ? 'Parfait ! Tu es un champion ! / ¡Perfecto! ¡Eres un campeón!'
+                ? "Parfait ! Tu es un champion ! / ¡Perfecto! ¡Eres un campeón!"
                 : score >= shuffled.length * 0.6
-                  ? 'Très bien ! / ¡Muy bien!'
-                  : 'Bon effort ! / ¡Buen esfuerzo!'}
+                  ? "Très bien ! / ¡Muy bien!"
+                  : "Bon effort ! / ¡Buen esfuerzo!"}
             </p>
           </div>
           <div className="flex gap-3">
             {[...Array(Math.min(score, 5))].map((_, i) => (
-              <span key={i} className="text-4xl animate-pop" style={{ animationDelay: `${i * 0.15}s` }}>
+              <span
+                key={i}
+                className="text-4xl animate-pop"
+                style={{ animationDelay: `${i * 0.15}s` }}
+              >
                 ⭐
               </span>
             ))}
@@ -223,17 +235,30 @@ export default function QuizMode({
             onClick={onBack}
             className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 active:scale-95 transition-all"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-gray-600">
-              <path d="M19 12H5" /><path d="M12 19l-7-7 7-7" />
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-6 h-6 text-gray-600"
+            >
+              <path d="M19 12H5" />
+              <path d="M12 19l-7-7 7-7" />
             </svg>
           </button>
-        ) : <div className="w-10" />}
+        ) : (
+          <div className="w-10" />
+        )}
         <span className="font-display text-sm font-bold text-gray-400">
           {currentIndex + 1} / {shuffled.length}
         </span>
         <div className="flex gap-1">
           {[...Array(score)].map((_, i) => (
-            <span key={i} className="text-lg animate-pop">⭐</span>
+            <span key={i} className="text-lg animate-pop">
+              ⭐
+            </span>
           ))}
         </div>
       </div>
@@ -254,16 +279,19 @@ export default function QuizMode({
         🔊 Réécouter
       </button>
 
-      <div className={`grid gap-4 w-full max-w-sm px-4 ${maxOptions <= 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
+      <div
+        className={`grid gap-4 w-full max-w-sm px-4 ${maxOptions <= 3 ? "grid-cols-3" : "grid-cols-2"}`}
+      >
         {currentQuestion.options.slice(0, maxOptions).map((option) => {
-          const isCorrectOption = option.id === currentQuestion.correctId ||
-                                  option.num === currentQuestion.correctNum;
+          const isCorrectOption =
+            option.id === currentQuestion.correctId ||
+            option.num === currentQuestion.correctNum;
           return (
             <div key={option.id || option.num}>
               {renderOption(option, {
                 isCorrect: showCorrectHint && isCorrectOption,
-                isSelectedWrong: option.id === selectedWrong ||
-                                 option.num === selectedWrong,
+                isSelectedWrong:
+                  option.id === selectedWrong || option.num === selectedWrong,
                 onSelect: () => handleAnswer(option.id || option.num),
                 disabled: isWaiting,
               })}
@@ -275,10 +303,10 @@ export default function QuizMode({
       {feedback && (
         <div
           className={`fixed inset-x-0 top-8 mx-auto w-fit px-8 py-4 rounded-2xl font-display font-bold text-xl text-white shadow-xl animate-float z-50 ${
-            feedback.type === 'correct' ? 'bg-green-500' : 'bg-red-400'
+            feedback.type === "correct" ? "bg-green-500" : "bg-red-400"
           }`}
         >
-          {feedback.type === 'correct' ? '✅ ' : '❌ '}
+          {feedback.type === "correct" ? "✅ " : "❌ "}
           {feedback.text}
         </div>
       )}

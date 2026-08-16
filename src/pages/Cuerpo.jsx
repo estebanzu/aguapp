@@ -1,72 +1,205 @@
-import { useState, useEffect } from 'react';
-import { speakBilingual, speak } from '../utils/speech';
-import { bodyParts, bodyQuestions } from '../data/bodyParts';
-import { playPop, playClick } from '../utils/sound';
-import { cargarProgreso, registrarIntento, esPrimeraVisita, marcarVisita } from '../utils/storage';
-import QuizMode from '../components/QuizMode';
+import { useState, useEffect } from "react";
+import { speakBilingual, speak } from "../utils/speech";
+import { bodyParts, bodyQuestions } from "../data/bodyParts";
+import { playPop, playClick } from "../utils/sound";
+import {
+  cargarProgreso,
+  registrarIntento,
+  esPrimeraVisita,
+  marcarVisita,
+} from "../utils/storage";
+import QuizMode from "../components/QuizMode";
 
 const partEmojis = {
-  head: '🗣️', eyes: '👀', nose: '👃', mouth: '👄', ears: '👂',
-  arms: '💪', hands: '🖐️', belly: '🫃', legs: '🦵', feet: '🦶',
+  head: "🗣️",
+  eyes: "👀",
+  nose: "👃",
+  mouth: "👄",
+  ears: "👂",
+  arms: "💪",
+  hands: "🖐️",
+  belly: "🫃",
+  legs: "🦵",
+  feet: "🦶",
 };
 
 function BodySVG({ activePart, onPartClick }) {
   const partStyles = (id) => {
     const isActive = activePart === id;
     return {
-      fill: isActive ? '#FBBF24' : '#93C5FD',
-      stroke: isActive ? '#F59E0B' : '#3B82F6',
+      fill: isActive ? "#FBBF24" : "#93C5FD",
+      stroke: isActive ? "#F59E0B" : "#3B82F6",
       strokeWidth: isActive ? 2.5 : 1.5,
-      transition: 'all 0.3s ease',
-      cursor: 'pointer',
-      filter: isActive ? 'drop-shadow(0 0 8px rgba(251, 191, 36, 0.6))' : 'none',
+      transition: "all 0.3s ease",
+      cursor: "pointer",
+      filter: isActive
+        ? "drop-shadow(0 0 8px rgba(251, 191, 36, 0.6))"
+        : "none",
     };
   };
 
   return (
     <svg viewBox="0 0 200 340" className="w-full max-w-[240px] mx-auto">
-      <circle cx="100" cy="40" r="28" style={partStyles('head')} onClick={() => onPartClick('head')} />
-      <ellipse cx="68" cy="40" rx="8" ry="12" style={partStyles('ears')} onClick={() => onPartClick('ears')} />
-      <ellipse cx="132" cy="40" rx="8" ry="12" style={partStyles('ears')} onClick={() => onPartClick('ears')} />
-      <circle cx="88" cy="36" r="5" style={partStyles('eyes')} onClick={() => onPartClick('eyes')} />
-      <circle cx="112" cy="36" r="5" style={partStyles('eyes')} onClick={() => onPartClick('eyes')} />
-      <ellipse cx="100" cy="46" rx="4" ry="3" style={partStyles('nose')} onClick={() => onPartClick('nose')} />
-      <path d="M 90 55 Q 100 62 110 55" style={{ ...partStyles('mouth'), fill: 'none', strokeWidth: 2.5 }} onClick={() => onPartClick('mouth')} />
-      <rect x="92" y="68" width="16" height="12" rx="4" fill="#FDE68A" stroke="#F59E0B" strokeWidth="1" />
-      <rect x="60" y="80" width="80" height="80" rx="16" style={partStyles('belly')} onClick={() => onPartClick('belly')} />
-      <rect x="28" y="84" width="30" height="14" rx="7" style={partStyles('arms')} onClick={() => onPartClick('arms')} />
-      <rect x="142" y="84" width="30" height="14" rx="7" style={partStyles('arms')} onClick={() => onPartClick('arms')} />
-      <circle cx="24" cy="91" r="10" style={partStyles('hands')} onClick={() => onPartClick('hands')} />
-      <circle cx="176" cy="91" r="10" style={partStyles('hands')} onClick={() => onPartClick('hands')} />
-      <rect x="62" y="162" width="24" height="70" rx="12" style={partStyles('legs')} onClick={() => onPartClick('legs')} />
-      <rect x="114" y="162" width="24" height="70" rx="12" style={partStyles('legs')} onClick={() => onPartClick('legs')} />
-      <ellipse cx="74" cy="240" rx="16" ry="10" style={partStyles('feet')} onClick={() => onPartClick('feet')} />
-      <ellipse cx="126" cy="240" rx="16" ry="10" style={partStyles('feet')} onClick={() => onPartClick('feet')} />
+      <circle
+        cx="100"
+        cy="40"
+        r="28"
+        style={partStyles("head")}
+        onClick={() => onPartClick("head")}
+      />
+      <ellipse
+        cx="68"
+        cy="40"
+        rx="8"
+        ry="12"
+        style={partStyles("ears")}
+        onClick={() => onPartClick("ears")}
+      />
+      <ellipse
+        cx="132"
+        cy="40"
+        rx="8"
+        ry="12"
+        style={partStyles("ears")}
+        onClick={() => onPartClick("ears")}
+      />
+      <circle
+        cx="88"
+        cy="36"
+        r="5"
+        style={partStyles("eyes")}
+        onClick={() => onPartClick("eyes")}
+      />
+      <circle
+        cx="112"
+        cy="36"
+        r="5"
+        style={partStyles("eyes")}
+        onClick={() => onPartClick("eyes")}
+      />
+      <ellipse
+        cx="100"
+        cy="46"
+        rx="4"
+        ry="3"
+        style={partStyles("nose")}
+        onClick={() => onPartClick("nose")}
+      />
+      <path
+        d="M 90 55 Q 100 62 110 55"
+        style={{ ...partStyles("mouth"), fill: "none", strokeWidth: 2.5 }}
+        onClick={() => onPartClick("mouth")}
+      />
+      <rect
+        x="92"
+        y="68"
+        width="16"
+        height="12"
+        rx="4"
+        fill="#FDE68A"
+        stroke="#F59E0B"
+        strokeWidth="1"
+      />
+      <rect
+        x="60"
+        y="80"
+        width="80"
+        height="80"
+        rx="16"
+        style={partStyles("belly")}
+        onClick={() => onPartClick("belly")}
+      />
+      <rect
+        x="28"
+        y="84"
+        width="30"
+        height="14"
+        rx="7"
+        style={partStyles("arms")}
+        onClick={() => onPartClick("arms")}
+      />
+      <rect
+        x="142"
+        y="84"
+        width="30"
+        height="14"
+        rx="7"
+        style={partStyles("arms")}
+        onClick={() => onPartClick("arms")}
+      />
+      <circle
+        cx="24"
+        cy="91"
+        r="10"
+        style={partStyles("hands")}
+        onClick={() => onPartClick("hands")}
+      />
+      <circle
+        cx="176"
+        cy="91"
+        r="10"
+        style={partStyles("hands")}
+        onClick={() => onPartClick("hands")}
+      />
+      <rect
+        x="62"
+        y="162"
+        width="24"
+        height="70"
+        rx="12"
+        style={partStyles("legs")}
+        onClick={() => onPartClick("legs")}
+      />
+      <rect
+        x="114"
+        y="162"
+        width="24"
+        height="70"
+        rx="12"
+        style={partStyles("legs")}
+        onClick={() => onPartClick("legs")}
+      />
+      <ellipse
+        cx="74"
+        cy="240"
+        rx="16"
+        ry="10"
+        style={partStyles("feet")}
+        onClick={() => onPartClick("feet")}
+      />
+      <ellipse
+        cx="126"
+        cy="240"
+        rx="16"
+        ry="10"
+        style={partStyles("feet")}
+        onClick={() => onPartClick("feet")}
+      />
     </svg>
   );
 }
 
 export default function Cuerpo() {
-  const [mode, setMode] = useState('explore');
+  const [mode, setMode] = useState("explore");
   const [activePart, setActivePart] = useState(null);
   const [perfil] = useState(() => cargarProgreso());
   const [showGuide, setShowGuide] = useState(false);
 
   useEffect(() => {
-    if (esPrimeraVisita(perfil, 'cuerpo')) {
+    if (esPrimeraVisita(perfil, "cuerpo")) {
       setShowGuide(true);
-      marcarVisita(perfil, 'cuerpo');
+      marcarVisita(perfil, "cuerpo");
       const timer = setTimeout(() => setShowGuide(false), 4000);
       return () => clearTimeout(timer);
     }
   }, []);
 
   const handlePartTap = (partId) => {
-    const part = bodyParts.find(p => p.id === partId);
+    const part = bodyParts.find((p) => p.id === partId);
     if (!part) return;
     playPop();
     setActivePart(partId);
-    registrarIntento(perfil, 'bodyParts', partId, true);
+    registrarIntento(perfil, "bodyParts", partId, true);
     speakBilingual(part.frComplete, part.esComplete, () => {
       setTimeout(() => setActivePart(null), 800);
     });
@@ -74,14 +207,17 @@ export default function Cuerpo() {
 
   const handleRepeat = () => {
     if (!activePart) return;
-    const part = bodyParts.find(p => p.id === activePart);
+    const part = bodyParts.find((p) => p.id === activePart);
     if (part) {
       playClick();
       speakBilingual(part.frComplete, part.esComplete);
     }
   };
 
-  const renderBodyPartOption = (part, { isCorrect, isSelectedWrong, onSelect, disabled }) => (
+  const renderBodyPartOption = (
+    part,
+    { isCorrect, isSelectedWrong, onSelect, disabled },
+  ) => (
     <button
       onClick={onSelect}
       disabled={disabled}
@@ -89,9 +225,9 @@ export default function Cuerpo() {
         w-full py-4 rounded-2xl flex items-center justify-center gap-3
         bg-white font-display font-bold text-lg text-gray-700
         transition-all duration-200 shadow-md border-2 border-gray-100
-        ${isSelectedWrong ? 'animate-shake opacity-50 border-red-300 bg-red-50' : ''}
-        ${isCorrect ? 'animate-pop ring-4 ring-yellow-400 ring-offset-2 border-yellow-300 bg-yellow-50' : ''}
-        ${disabled ? 'cursor-not-allowed' : 'active:scale-95 hover:scale-105 hover:shadow-lg'}
+        ${isSelectedWrong ? "animate-shake opacity-50 border-red-300 bg-red-50" : ""}
+        ${isCorrect ? "animate-pop ring-4 ring-yellow-400 ring-offset-2 border-yellow-300 bg-yellow-50" : ""}
+        ${disabled ? "cursor-not-allowed" : "active:scale-95 hover:scale-105 hover:shadow-lg"}
       `}
     >
       <span className="text-2xl">{partEmojis[part.id]}</span>
@@ -113,21 +249,27 @@ export default function Cuerpo() {
         </div>
         <div className="flex gap-2">
           <button
-            onClick={() => { setMode('explore'); playClick(); }}
+            onClick={() => {
+              setMode("explore");
+              playClick();
+            }}
             className={`px-4 py-2 rounded-xl font-display font-bold text-sm transition-all ${
-              mode === 'explore'
-                ? 'bg-gray-800 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              mode === "explore"
+                ? "bg-gray-800 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             🔍 Explorer
           </button>
           <button
-            onClick={() => { setMode('quiz'); playClick(); }}
+            onClick={() => {
+              setMode("quiz");
+              playClick();
+            }}
             className={`px-4 py-2 rounded-xl font-display font-bold text-sm transition-all ${
-              mode === 'quiz'
-                ? 'bg-yellow-400 text-gray-800'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              mode === "quiz"
+                ? "bg-yellow-400 text-gray-800"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             ⭐ Jouer
@@ -146,7 +288,7 @@ export default function Cuerpo() {
         </div>
       )}
 
-      {mode === 'explore' ? (
+      {mode === "explore" ? (
         <>
           <div className="bg-white rounded-3xl shadow-lg p-6 mb-6">
             <BodySVG activePart={activePart} onPartClick={handlePartTap} />
@@ -161,9 +303,10 @@ export default function Cuerpo() {
                   py-3 px-4 rounded-2xl flex items-center gap-3
                   bg-white font-display font-bold text-gray-700
                   transition-all duration-200 shadow-md border-2
-                  ${activePart === part.id
-                    ? 'border-yellow-400 bg-yellow-50 scale-105'
-                    : 'border-gray-100 hover:border-blue-200 hover:scale-105'
+                  ${
+                    activePart === part.id
+                      ? "border-yellow-400 bg-yellow-50 scale-105"
+                      : "border-gray-100 hover:border-blue-200 hover:scale-105"
                   }
                   active:scale-95
                 `}
@@ -190,17 +333,19 @@ export default function Cuerpo() {
         </>
       ) : (
         <QuizMode
-          questions={bodyQuestions.map(q => ({
+          questions={bodyQuestions.map((q) => ({
             ...q,
             options: (() => {
-              const correct = bodyParts.find(p => p.id === q.correctId);
-              const others = bodyParts.filter(p => p.id !== q.correctId);
-              const shuffled = others.sort(() => Math.random() - 0.5).slice(0, 3);
+              const correct = bodyParts.find((p) => p.id === q.correctId);
+              const others = bodyParts.filter((p) => p.id !== q.correctId);
+              const shuffled = others
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
               return [...shuffled, correct].sort(() => Math.random() - 0.5);
             })(),
           }))}
           renderOption={renderBodyPartOption}
-          onBack={() => setMode('explore')}
+          onBack={() => setMode("explore")}
           totalQuestions={5}
           maxOptions={4}
         />

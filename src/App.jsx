@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import Home from './pages/Home';
-import Colores from './pages/Colores';
-import Numeros from './pages/Numeros';
-import Cuerpo from './pages/Cuerpo';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import Colores from "./pages/Colores";
+import Numeros from "./pages/Numeros";
+import Cuerpo from "./pages/Cuerpo";
 
 export default function App() {
   return (

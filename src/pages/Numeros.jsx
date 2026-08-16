@@ -1,9 +1,14 @@
-import { useState, useEffect } from 'react';
-import { speakBilingual, speak } from '../utils/speech';
-import { numbers, numberQuestions } from '../data/numbers';
-import { playPop, playClick } from '../utils/sound';
-import { cargarProgreso, registrarIntento, esPrimeraVisita, marcarVisita } from '../utils/storage';
-import QuizMode from '../components/QuizMode';
+import { useState, useEffect } from "react";
+import { speakBilingual, speak } from "../utils/speech";
+import { numbers, numberQuestions } from "../data/numbers";
+import { playPop, playClick } from "../utils/sound";
+import {
+  cargarProgreso,
+  registrarIntento,
+  esPrimeraVisita,
+  marcarVisita,
+} from "../utils/storage";
+import QuizMode from "../components/QuizMode";
 
 function DotGrid({ count, isActive }) {
   const cols = count <= 5 ? 5 : count <= 8 ? 4 : 5;
@@ -18,7 +23,7 @@ function DotGrid({ count, isActive }) {
           className={`
             w-3 h-3 rounded-full
             transition-all duration-300
-            ${isActive ? 'bg-yellow-400 animate-pop' : 'bg-gray-300'}
+            ${isActive ? "bg-yellow-400 animate-pop" : "bg-gray-300"}
           `}
           style={{ animationDelay: `${i * 0.05}s` }}
         />
@@ -28,15 +33,15 @@ function DotGrid({ count, isActive }) {
 }
 
 export default function Numeros() {
-  const [mode, setMode] = useState('explore');
+  const [mode, setMode] = useState("explore");
   const [activeNumber, setActiveNumber] = useState(null);
   const [perfil] = useState(() => cargarProgreso());
   const [showGuide, setShowGuide] = useState(false);
 
   useEffect(() => {
-    if (esPrimeraVisita(perfil, 'numeros')) {
+    if (esPrimeraVisita(perfil, "numeros")) {
       setShowGuide(true);
-      marcarVisita(perfil, 'numeros');
+      marcarVisita(perfil, "numeros");
       const timer = setTimeout(() => setShowGuide(false), 4000);
       return () => clearTimeout(timer);
     }
@@ -45,7 +50,7 @@ export default function Numeros() {
   const handleNumberTap = (number) => {
     playPop();
     setActiveNumber(number.num);
-    registrarIntento(perfil, 'numbers', String(number.num), true);
+    registrarIntento(perfil, "numbers", String(number.num), true);
     speakBilingual(number.fr, number.es, () => {
       setTimeout(() => setActiveNumber(null), 500);
     });
@@ -53,14 +58,17 @@ export default function Numeros() {
 
   const handleRepeat = () => {
     if (!activeNumber) return;
-    const number = numbers.find(n => n.num === activeNumber);
+    const number = numbers.find((n) => n.num === activeNumber);
     if (number) {
       playClick();
       speakBilingual(number.fr, number.es);
     }
   };
 
-  const renderNumberOption = (number, { isCorrect, isSelectedWrong, onSelect, disabled }) => (
+  const renderNumberOption = (
+    number,
+    { isCorrect, isSelectedWrong, onSelect, disabled },
+  ) => (
     <button
       onClick={onSelect}
       disabled={disabled}
@@ -68,9 +76,9 @@ export default function Numeros() {
         w-full aspect-square rounded-3xl flex flex-col items-center justify-center gap-2
         bg-white font-display font-black text-4xl text-gray-800
         transition-all duration-200 shadow-lg border-3 border-gray-100
-        ${isSelectedWrong ? 'animate-shake opacity-50 border-red-300' : ''}
-        ${isCorrect ? 'animate-pop ring-4 ring-yellow-400 ring-offset-2 border-yellow-300 bg-yellow-50' : ''}
-        ${disabled ? 'cursor-not-allowed' : 'active:scale-95 hover:scale-105 hover:shadow-xl'}
+        ${isSelectedWrong ? "animate-shake opacity-50 border-red-300" : ""}
+        ${isCorrect ? "animate-pop ring-4 ring-yellow-400 ring-offset-2 border-yellow-300 bg-yellow-50" : ""}
+        ${disabled ? "cursor-not-allowed" : "active:scale-95 hover:scale-105 hover:shadow-xl"}
       `}
     >
       <span>{number.num}</span>
@@ -90,21 +98,27 @@ export default function Numeros() {
         </div>
         <div className="flex gap-2">
           <button
-            onClick={() => { setMode('explore'); playClick(); }}
+            onClick={() => {
+              setMode("explore");
+              playClick();
+            }}
             className={`px-4 py-2 rounded-xl font-display font-bold text-sm transition-all ${
-              mode === 'explore'
-                ? 'bg-gray-800 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              mode === "explore"
+                ? "bg-gray-800 text-white"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             🔍 Explorer
           </button>
           <button
-            onClick={() => { setMode('quiz'); playClick(); }}
+            onClick={() => {
+              setMode("quiz");
+              playClick();
+            }}
             className={`px-4 py-2 rounded-xl font-display font-bold text-sm transition-all ${
-              mode === 'quiz'
-                ? 'bg-yellow-400 text-gray-800'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              mode === "quiz"
+                ? "bg-yellow-400 text-gray-800"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
             ⭐ Jouer
@@ -123,7 +137,7 @@ export default function Numeros() {
         </div>
       )}
 
-      {mode === 'explore' ? (
+      {mode === "explore" ? (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-lg mx-auto">
             {numbers.map((number) => (
@@ -135,13 +149,18 @@ export default function Numeros() {
                   bg-white font-display font-black text-4xl text-gray-800
                   transition-all duration-300 shadow-lg border-2 border-gray-100
                   hover:scale-105 active:scale-95
-                  ${activeNumber === number.num ? 'scale-110 ring-4 ring-yellow-400 ring-offset-4 animate-glow border-yellow-300' : ''}
+                  ${activeNumber === number.num ? "scale-110 ring-4 ring-yellow-400 ring-offset-4 animate-glow border-yellow-300" : ""}
                 `}
               >
                 <span className="text-5xl">{number.num}</span>
-                <DotGrid count={number.dots} isActive={activeNumber === number.num} />
+                <DotGrid
+                  count={number.dots}
+                  isActive={activeNumber === number.num}
+                />
                 <div className="flex flex-col items-center">
-                  <span className="text-sm font-bold text-gray-600">{number.fr}</span>
+                  <span className="text-sm font-bold text-gray-600">
+                    {number.fr}
+                  </span>
                   <span className="text-xs text-gray-400">{number.es}</span>
                 </div>
               </button>
@@ -161,17 +180,19 @@ export default function Numeros() {
         </>
       ) : (
         <QuizMode
-          questions={numberQuestions.map(q => ({
+          questions={numberQuestions.map((q) => ({
             ...q,
             options: (() => {
-              const correct = numbers.find(n => n.num === q.correctNum);
-              const others = numbers.filter(n => n.num !== q.correctNum);
-              const shuffled = others.sort(() => Math.random() - 0.5).slice(0, 3);
+              const correct = numbers.find((n) => n.num === q.correctNum);
+              const others = numbers.filter((n) => n.num !== q.correctNum);
+              const shuffled = others
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
               return [...shuffled, correct].sort(() => Math.random() - 0.5);
             })(),
           }))}
           renderOption={renderNumberOption}
-          onBack={() => setMode('explore')}
+          onBack={() => setMode("explore")}
           totalQuestions={5}
           maxOptions={4}
         />

@@ -1,8 +1,8 @@
-const STORAGE_KEY = 'agus-progress';
+const STORAGE_KEY = "agus-progress";
 
 function crearPerfilInicial() {
   return {
-    name: 'Agus',
+    name: "Agus",
     age: 4,
     startDate: new Date().toISOString(),
     concepts: {
@@ -44,7 +44,11 @@ export function registrarIntento(perfil, seccion, concepto, esCorrecto) {
     perfil.concepts[seccion] = {};
   }
   if (!perfil.concepts[seccion][concepto]) {
-    perfil.concepts[seccion][concepto] = { attempts: 0, correct: 0, mastery: 0 };
+    perfil.concepts[seccion][concepto] = {
+      attempts: 0,
+      correct: 0,
+      mastery: 0,
+    };
   }
   const c = perfil.concepts[seccion][concepto];
   c.attempts++;
@@ -100,7 +104,11 @@ export function obtenerConceptosDebiles(perfil) {
   for (const [seccion, conceptos] of Object.entries(perfil.concepts)) {
     for (const [concepto, datos] of Object.entries(conceptos)) {
       if (datos.attempts >= 3 && datos.mastery < 0.6) {
-        debiles.push({ section: seccion, concept: concepto, mastery: datos.mastery });
+        debiles.push({
+          section: seccion,
+          concept: concepto,
+          mastery: datos.mastery,
+        });
       }
     }
   }

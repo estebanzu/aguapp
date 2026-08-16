@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
-import { speak, speakExcited } from '../utils/speech';
-import { classifyColors, classifyItems } from '../data/animals';
-import { playPop, playSuccess, playError, playClick } from '../utils/sound';
-import { cargarProgreso, registrarIntento } from '../utils/storage';
+import { useState, useCallback } from "react";
+import { speak, speakExcited } from "../utils/speech";
+import { classifyColors, classifyItems } from "../data/animals";
+import { playPop, playSuccess, playError, playClick } from "../utils/sound";
+import { cargarProgreso, registrarIntento } from "../utils/storage";
 
 function shuffleArray(arr) {
   const a = [...arr];
@@ -23,12 +23,17 @@ export default function Clasificar() {
   const [perfil] = useState(() => cargarProgreso());
 
   const levels = [
-    { colors: classifyColors.slice(0, 2), items: classifyItems.filter(i => ['red', 'blue'].includes(i.colorId)).slice(0, 6) },
+    {
+      colors: classifyColors.slice(0, 2),
+      items: classifyItems
+        .filter((i) => ["red", "blue"].includes(i.colorId))
+        .slice(0, 6),
+    },
     { colors: classifyColors, items: classifyItems },
   ];
 
   const current = levels[Math.min(level, levels.length - 1)];
-  const unplaced = current.items.filter(item => !placed[item.id]);
+  const unplaced = current.items.filter((item) => !placed[item.id]);
   const totalItems = current.items.length;
   const placedCount = Object.keys(placed).length;
 
@@ -37,33 +42,45 @@ export default function Clasificar() {
     setDragging(itemId);
   };
 
-  const handleDrop = useCallback((colorId) => {
-    if (!dragging) return;
-    const item = current.items.find(i => i.id === dragging);
-    if (!item) return;
+  const handleDrop = useCallback(
+    (colorId) => {
+      if (!dragging) return;
+      const item = current.items.find((i) => i.id === dragging);
+      if (!item) return;
 
-    if (item.colorId === colorId) {
-      playSuccess();
-      setPlaced(prev => ({ ...prev, [dragging]: colorId }));
-      setScore(prev => prev + 1);
-      registrarIntento(perfil, 'classify', item.colorId, true);
-      speak(`${item.fr} est ${classifyColors.find(c => c.id === colorId).fr}`, 'fr-FR');
+      if (item.colorId === colorId) {
+        playSuccess();
+        setPlaced((prev) => ({ ...prev, [dragging]: colorId }));
+        setScore((prev) => prev + 1);
+        registrarIntento(perfil, "classify", item.colorId, true);
+        speak(
+          `${item.fr} est ${classifyColors.find((c) => c.id === colorId).fr}`,
+          "fr-FR",
+        );
 
-      const newPlacedCount = Object.keys({ ...placed, [dragging]: colorId }).length;
-      if (newPlacedCount >= totalItems) {
-        setTimeout(() => {
-          playSuccess();
-          setIsComplete(true);
-        }, 500);
+        const newPlacedCount = Object.keys({
+          ...placed,
+          [dragging]: colorId,
+        }).length;
+        if (newPlacedCount >= totalItems) {
+          setTimeout(() => {
+            playSuccess();
+            setIsComplete(true);
+          }, 500);
+        }
+      } else {
+        playError();
+        registrarIntento(perfil, "classify", item.colorId, false);
+        setFeedback({
+          type: "error",
+          text: "Essaie encore ! / ¡Inténtalo de nuevo!",
+        });
+        setTimeout(() => setFeedback(null), 1500);
       }
-    } else {
-      playError();
-      registrarIntento(perfil, 'classify', item.colorId, false);
-      setFeedback({ type: 'error', text: 'Essaie encore ! / ¡Inténtalo de nuevo!' });
-      setTimeout(() => setFeedback(null), 1500);
-    }
-    setDragging(null);
-  }, [dragging, current.items, placed, totalItems, perfil]);
+      setDragging(null);
+    },
+    [dragging, current.items, placed, totalItems, perfil],
+  );
 
   const handleTouchDrop = (colorId) => {
     if (dragging) {
@@ -81,7 +98,7 @@ export default function Clasificar() {
 
   const nextLevel = () => {
     if (level + 1 < levels.length) {
-      setLevel(prev => prev + 1);
+      setLevel((prev) => prev + 1);
       setPlaced({});
       setScore(0);
       setIsComplete(false);
@@ -96,11 +113,13 @@ export default function Clasificar() {
         <div className="flex flex-col items-center justify-center gap-6 py-12 animate-bounce-in">
           <div className="text-6xl animate-pop">🎉</div>
           <div className="text-center">
-            <p className="font-display text-3xl font-black text-green-500">Terminé !</p>
+            <p className="font-display text-3xl font-black text-green-500">
+              Terminé !
+            </p>
             <p className="font-display text-xl font-bold text-gray-700 mt-2">
               {level + 1 < levels.length
-                ? 'Prêt pour la suite ? / ¿Listo para seguir?'
-                : 'Champion du tri ! / ¡Campeón del clasificar!'}
+                ? "Prêt pour la suite ? / ¿Listo para seguir?"
+                : "Champion du tri ! / ¡Campeón del clasificar!"}
             </p>
           </div>
           <div className="flex gap-3">
@@ -140,7 +159,8 @@ export default function Clasificar() {
       </div>
 
       <p className="font-body text-gray-500 text-center mb-6">
-        Touche un objet, puis touche la couleur ! / ¡Toca un objeto, luego toca el color!
+        Touche un objet, puis touche la couleur ! / ¡Toca un objeto, luego toca
+        el color!
       </p>
 
       {/* Color buckets */}
@@ -153,8 +173,8 @@ export default function Clasificar() {
               w-24 h-28 rounded-2xl flex flex-col items-center justify-center gap-1
               font-display font-bold text-white text-sm
               transition-all duration-200 shadow-lg border-3 border-white/30
-              ${dragging ? 'scale-105 animate-glow' : ''}
-              ${feedback?.type === 'error' ? 'animate-shake' : ''}
+              ${dragging ? "scale-105 animate-glow" : ""}
+              ${feedback?.type === "error" ? "animate-shake" : ""}
             `}
             style={{ backgroundColor: color.hex }}
           >
@@ -178,26 +198,31 @@ export default function Clasificar() {
               className={`
                 aspect-square rounded-2xl flex flex-col items-center justify-center gap-1
                 bg-white border-2 transition-all duration-200 shadow-md
-                ${isPlaced
-                  ? 'border-green-300 bg-green-50 opacity-50'
-                  : isSelected
-                    ? 'border-yellow-400 bg-yellow-50 scale-110 shadow-lg'
-                    : 'border-gray-100 hover:border-blue-200 hover:scale-105'
+                ${
+                  isPlaced
+                    ? "border-green-300 bg-green-50 opacity-50"
+                    : isSelected
+                      ? "border-yellow-400 bg-yellow-50 scale-110 shadow-lg"
+                      : "border-gray-100 hover:border-blue-200 hover:scale-105"
                 }
                 active:scale-95
               `}
             >
               <span className="text-3xl">{item.emoji}</span>
-              <span className="font-display text-xs font-bold text-gray-600">{item.fr}</span>
+              <span className="font-display text-xs font-bold text-gray-600">
+                {item.fr}
+              </span>
             </button>
           );
         })}
       </div>
 
       {feedback && (
-        <div className={`fixed inset-x-0 top-8 mx-auto w-fit px-8 py-4 rounded-2xl font-display font-bold text-xl text-white shadow-xl animate-float z-50 ${
-          feedback.type === 'error' ? 'bg-red-400' : 'bg-green-500'
-        }`}>
+        <div
+          className={`fixed inset-x-0 top-8 mx-auto w-fit px-8 py-4 rounded-2xl font-display font-bold text-xl text-white shadow-xl animate-float z-50 ${
+            feedback.type === "error" ? "bg-red-400" : "bg-green-500"
+          }`}
+        >
           {feedback.text}
         </div>
       )}
