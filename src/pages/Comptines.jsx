@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { comptines } from "../data/comptines";
 import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import { playPop, playClick, playWhoosh } from "../utils/sound";
 
 export default function Comptines() {
+  const { lang } = useLanguage();
   const [selected, setSelected] = useState(null);
-  const [lang, setLang] = useState("fr");
 
   const handlePlay = (c) => {
     playPop();
@@ -32,29 +33,6 @@ export default function Comptines() {
               <h2 className="text-2xl font-bold text-violet-800 mt-2">
                 {selected.id}
               </h2>
-            </div>
-
-            <div className="flex justify-center gap-2 mb-6">
-              <button
-                onClick={() => setLang("fr")}
-                className={`px-4 py-2 rounded-xl font-bold transition-all ${
-                  lang === "fr"
-                    ? "bg-violet-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                🇫🇷 Français
-              </button>
-              <button
-                onClick={() => setLang("es")}
-                className={`px-4 py-2 rounded-xl font-bold transition-all ${
-                  lang === "es"
-                    ? "bg-violet-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                🇪🇸 Español
-              </button>
             </div>
 
             <div className="bg-violet-50 rounded-2xl p-5 mb-4">

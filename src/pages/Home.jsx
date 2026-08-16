@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import { playClick } from "../utils/sound";
 import { cargarProgreso } from "../utils/storage";
 import Mascot from "../components/Mascot";
@@ -12,8 +13,8 @@ const sections = [
     labelFr: "Couleurs",
     labelEs: "Colores",
     emoji: "🎨",
-    color: "from-red-400 to-orange-400",
-    shadow: "shadow-red-200",
+    color: "from-[#9BB5C4] to-[#7BA7BC]",
+    shadow: "shadow-[#9BB5C4]/30",
     masteryKey: "colors",
   },
   {
@@ -21,8 +22,8 @@ const sections = [
     labelFr: "Nombres",
     labelEs: "Números",
     emoji: "🔢",
-    color: "from-blue-400 to-purple-400",
-    shadow: "shadow-blue-200",
+    color: "from-[#B8C9A3] to-[#9AB88A]",
+    shadow: "shadow-[#B8C9A3]/30",
     masteryKey: "numbers",
   },
   {
@@ -30,8 +31,8 @@ const sections = [
     labelFr: "Corps",
     labelEs: "Cuerpo",
     emoji: "🧍",
-    color: "from-green-400 to-teal-400",
-    shadow: "shadow-green-200",
+    color: "from-[#D4A5A5] to-[#C48E8E]",
+    shadow: "shadow-[#D4A5A5]/30",
     masteryKey: "bodyParts",
   },
   {
@@ -39,8 +40,8 @@ const sections = [
     labelFr: "Formes",
     labelEs: "Formas",
     emoji: "🔷",
-    color: "from-pink-400 to-rose-400",
-    shadow: "shadow-pink-200",
+    color: "from-[#C9A9D4] to-[#B895C4]",
+    shadow: "shadow-[#C9A9D4]/30",
     masteryKey: "formas",
   },
   {
@@ -48,8 +49,8 @@ const sections = [
     labelFr: "Compter",
     labelEs: "Contar",
     emoji: "🐾",
-    color: "from-amber-400 to-yellow-400",
-    shadow: "shadow-amber-200",
+    color: "from-[#E8C97A] to-[#D4B56A]",
+    shadow: "shadow-[#E8C97A]/30",
     masteryKey: null,
   },
   {
@@ -57,8 +58,8 @@ const sections = [
     labelFr: "Trier",
     labelEs: "Clasificar",
     emoji: "🎯",
-    color: "from-indigo-400 to-blue-400",
-    shadow: "shadow-indigo-200",
+    color: "from-[#C9886E] to-[#B8775E]",
+    shadow: "shadow-[#C9886E]/30",
     masteryKey: null,
   },
   {
@@ -66,8 +67,8 @@ const sections = [
     labelFr: "Motifs",
     labelEs: "Motivos",
     emoji: "🔴",
-    color: "from-violet-400 to-purple-400",
-    shadow: "shadow-violet-200",
+    color: "from-[#D4A5A5] to-[#C9886E]",
+    shadow: "shadow-[#D4A5A5]/30",
     masteryKey: "motifs",
   },
   {
@@ -75,8 +76,8 @@ const sections = [
     labelFr: "Grandeurs",
     labelEs: "Tamaños",
     emoji: "📏",
-    color: "from-orange-400 to-amber-400",
-    shadow: "shadow-orange-200",
+    color: "from-[#E8C97A] to-[#C9886E]",
+    shadow: "shadow-[#E8C97A]/30",
     masteryKey: "grandeurs",
   },
   {
@@ -84,8 +85,8 @@ const sections = [
     labelFr: "Vocabulaire",
     labelEs: "Vocabulario",
     emoji: "📚",
-    color: "from-rose-400 to-pink-400",
-    shadow: "shadow-rose-200",
+    color: "from-[#9BB5C4] to-[#C9A9D4]",
+    shadow: "shadow-[#9BB5C4]/30",
     masteryKey: "vocabulaire",
   },
   {
@@ -93,8 +94,8 @@ const sections = [
     labelFr: "Problèmes",
     labelEs: "Problemas",
     emoji: "➕",
-    color: "from-emerald-400 to-teal-400",
-    shadow: "shadow-emerald-200",
+    color: "from-[#B8C9A3] to-[#7BA7BC]",
+    shadow: "shadow-[#B8C9A3]/30",
     masteryKey: "problemes",
   },
   {
@@ -102,8 +103,8 @@ const sections = [
     labelFr: "Comptines",
     labelEs: "Canciones",
     emoji: "🎵",
-    color: "from-purple-400 to-violet-400",
-    shadow: "shadow-purple-200",
+    color: "from-[#C9A9D4] to-[#D4A5A5]",
+    shadow: "shadow-[#C9A9D4]/30",
     masteryKey: "comptines",
   },
   {
@@ -111,13 +112,14 @@ const sections = [
     labelFr: "Défi du jour",
     labelEs: "Reto del día",
     emoji: "⭐",
-    color: "from-yellow-400 to-orange-400",
-    shadow: "shadow-yellow-200",
+    color: "from-[#E8C97A] to-[#D4A5A5]",
+    shadow: "shadow-[#E8C97A]/30",
     masteryKey: null,
   },
 ];
 
 export default function Home() {
+  const { lang } = useLanguage();
   const [perfil] = useState(() => cargarProgreso());
   const [showDashboard, setShowDashboard] = useState(false);
   const [logoTapCount, setLogoTapCount] = useState(0);
@@ -125,7 +127,12 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      speak("Bonjour ! Apprendre avec Agus !", "fr-FR");
+      speak(
+        lang === "fr"
+          ? "Bonjour ! Bienvenue dans Petit Monde !"
+          : "¡Hola ! Bienvenido a Petit Monde !",
+        lang,
+      );
     }, 800);
     return () => clearTimeout(timer);
   }, []);
@@ -158,26 +165,20 @@ export default function Home() {
 
       <button
         onClick={handleLogoTap}
-        className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg shadow-yellow-200 animate-glow active:scale-95 transition-transform mb-3"
+        className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg shadow-sage/30 animate-glow active:scale-95 transition-transform mb-3 bg-cream border-2 border-sage"
       >
-        <span className="text-4xl font-display font-black">A</span>
+        <img src="/logo.svg" alt="Petit Monde" className="w-20 h-20" />
       </button>
 
       <h1
-        className="font-display text-3xl font-black text-center text-gray-800 mb-0.5 animate-bounce-in"
+        className="font-display text-3xl font-black text-center text-charcoal mb-0.5 animate-bounce-in"
         style={{ animationDelay: "0.2s" }}
       >
-        Apprendre avec
-      </h1>
-      <h1
-        className="font-display text-4xl font-black text-center text-amber-600 mb-2 animate-bounce-in"
-        style={{ animationDelay: "0.3s" }}
-      >
-        Agus
+        Petit Monde
       </h1>
       <p
-        className="font-body text-sm text-gray-500 mb-3 text-center animate-bounce-in"
-        style={{ animationDelay: "0.4s" }}
+        className="font-body text-sm text-charcoal/60 mb-3 text-center animate-bounce-in"
+        style={{ animationDelay: "0.3s" }}
       >
         Apprends en français et en espagnol !
       </p>
@@ -196,7 +197,7 @@ export default function Home() {
           className="mb-3 px-4 py-1.5 bg-orange-50 rounded-full border border-orange-200 animate-bounce-in"
           style={{ animationDelay: "0.5s" }}
         >
-          <span className="font-display text-sm font-bold text-orange-600">
+          <span className="font-display text-sm font-bold text-muted-terracotta">
             🔥 {perfil.currentStreak} jour{perfil.currentStreak > 1 ? "s" : ""}{" "}
             !
           </span>
@@ -217,9 +218,8 @@ export default function Home() {
               style={{ animationDelay: `${0.55 + index * 0.07}s` }}
             >
               <span className="text-2xl">{section.emoji}</span>
-              <span className="leading-tight">{section.labelFr}</span>
-              <span className="text-[10px] opacity-80 leading-tight">
-                {section.labelEs}
+              <span className="leading-tight">
+                {lang === "fr" ? section.labelFr : section.labelEs}
               </span>
               {mastery !== null && mastery > 0 && (
                 <div className="w-full bg-white/30 rounded-full h-1 mt-0.5">
@@ -234,7 +234,7 @@ export default function Home() {
         })}
       </div>
 
-      <p className="font-body text-[10px] text-gray-400 text-center">
+      <p className="font-body text-[10px] text-charcoal/40 text-center">
         Touche le logo 5 fois pour les paramètres parents 👆
       </p>
     </div>

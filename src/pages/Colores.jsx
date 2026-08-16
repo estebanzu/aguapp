@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { speakBilingual, speak } from "../utils/speech";
+import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import { colors, colorQuestions } from "../data/colors";
 import { playPop, playClick } from "../utils/sound";
 import {
   cargarProgreso,
-  guardarProgreso,
   registrarIntento,
   esPrimeraVisita,
   marcarVisita,
@@ -13,11 +12,11 @@ import {
 import QuizMode from "../components/QuizMode";
 
 export default function Colores() {
+  const { lang } = useLanguage();
   const [mode, setMode] = useState("explore");
   const [activeColor, setActiveColor] = useState(null);
   const [perfil, setPerfil] = useState(() => cargarProgreso());
   const [showGuide, setShowGuide] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (esPrimeraVisita(perfil, "colores")) {
@@ -32,9 +31,8 @@ export default function Colores() {
     playPop();
     setActiveColor(color.id);
     registrarIntento(perfil, "colors", color.id, true);
-    speakBilingual(color.fr, color.es, () => {
-      setTimeout(() => setActiveColor(null), 500);
-    });
+    speak(lang === "fr" ? color.fr : color.es, lang);
+    setTimeout(() => setActiveColor(null), 1500);
   };
 
   const handleRepeat = () => {
@@ -42,7 +40,7 @@ export default function Colores() {
     const color = colors.find((c) => c.id === activeColor);
     if (color) {
       playClick();
-      speakBilingual(color.fr, color.es);
+      speak(lang === "fr" ? color.fr : color.es, lang);
     }
   };
 
@@ -53,19 +51,15 @@ export default function Colores() {
     <button
       onClick={onSelect}
       disabled={disabled}
-      className={`
-        w-full aspect-square rounded-3xl flex flex-col items-center justify-center gap-2
-        font-display font-bold text-white text-xl
-        transition-all duration-200 shadow-lg
-        ${isSelectedWrong ? "animate-shake opacity-50" : ""}
-        ${isCorrect ? "animate-pop ring-4 ring-yellow-400 ring-offset-2" : ""}
-        ${disabled ? "cursor-not-allowed" : "active:scale-95 hover:scale-105"}
-      `}
+      className={`w-full aspect-square rounded-3xl flex flex-col items-center justify-center gap-2 font-display font-bold text-white text-xl transition-all duration-200 shadow-lg ${
+        isSelectedWrong ? "animate-shake opacity-50" : ""
+      } ${isCorrect ? "animate-pop ring-4 ring-yellow-400 ring-offset-2" : ""} ${
+        disabled ? "cursor-not-allowed" : "active:scale-95 hover:scale-105"
+      }`}
       style={{ backgroundColor: color.hex }}
     >
       <span className="text-3xl">{color.emoji}</span>
-      <span>{color.fr}</span>
-      <span className="text-sm opacity-80">{color.es}</span>
+      <span>{lang === "fr" ? color.fr : color.es}</span>
     </button>
   );
 
@@ -74,9 +68,8 @@ export default function Colores() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-display text-3xl font-black text-gray-800">
-            🎨 Couleurs
+            🎨 {lang === "fr" ? "Couleurs" : "Colores"}
           </h1>
-          <p className="font-body text-gray-500">Colores</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -90,7 +83,7 @@ export default function Colores() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            🔍 Explorer
+            🔍 {lang === "fr" ? "Explorer" : "Explorar"}
           </button>
           <button
             onClick={() => {
@@ -103,7 +96,7 @@ export default function Colores() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            ⭐ Jouer
+            ⭐ {lang === "fr" ? "Jouer" : "Jugar"}
           </button>
         </div>
       </div>
@@ -111,10 +104,10 @@ export default function Colores() {
       {showGuide && (
         <div className="mb-4 p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 animate-bounce-in">
           <p className="font-display text-sm font-bold text-blue-700 text-center">
-            👆 Touche un couleur pour l'écouter !
-          </p>
-          <p className="font-body text-xs text-blue-500 text-center mt-1">
-            Toca un color para escucharlo
+            👆{" "}
+            {lang === "fr"
+              ? "Touche une couleur pour l'écouter !"
+              : "¡Toca un color para escucharlo!"}
           </p>
         </div>
       )}
@@ -126,18 +119,15 @@ export default function Colores() {
               <button
                 key={color.id}
                 onClick={() => handleColorTap(color)}
-                className={`
-                  aspect-square rounded-3xl flex flex-col items-center justify-center gap-3
-                  font-display font-bold text-white text-2xl
-                  transition-all duration-300 shadow-xl
-                  hover:scale-105 active:scale-95
-                  ${activeColor === color.id ? "scale-110 ring-4 ring-yellow-400 ring-offset-4 animate-glow" : ""}
-                `}
+                className={`aspect-square rounded-3xl flex flex-col items-center justify-center gap-3 font-display font-bold text-white text-2xl transition-all duration-300 shadow-xl hover:scale-105 active:scale-95 ${
+                  activeColor === color.id
+                    ? "scale-110 ring-4 ring-yellow-400 ring-offset-4 animate-glow"
+                    : ""
+                }`}
                 style={{ backgroundColor: color.hex }}
               >
                 <span className="text-4xl">{color.emoji}</span>
-                <span>{color.fr}</span>
-                <span className="text-sm opacity-80">{color.es}</span>
+                <span>{lang === "fr" ? color.fr : color.es}</span>
               </button>
             ))}
           </div>
@@ -148,7 +138,7 @@ export default function Colores() {
                 onClick={handleRepeat}
                 className="px-6 py-3 bg-white rounded-2xl shadow-md border-2 border-gray-100 font-display font-bold text-gray-700 hover:scale-105 active:scale-95 transition-all"
               >
-                🔁 Répète après moi / Repite después de mí
+                🔁 {lang === "fr" ? "Répète après moi" : "Repite después de mí"}
               </button>
             </div>
           )}
@@ -160,10 +150,10 @@ export default function Colores() {
             options: (() => {
               const correct = colors.find((c) => c.id === q.correctId);
               const others = colors.filter((c) => c.id !== q.correctId);
-              const shuffled = others
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 3);
-              return [...shuffled, correct].sort(() => Math.random() - 0.5);
+              return [
+                ...others.sort(() => Math.random() - 0.5).slice(0, 3),
+                correct,
+              ].sort(() => Math.random() - 0.5);
             })(),
           }))}
           renderOption={renderColorOption}

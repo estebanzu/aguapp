@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { playClick } from "../utils/sound";
+import LanguageSelector from "./LanguageSelector";
 
 const navItems = [
   {
@@ -111,6 +112,7 @@ const navItems = [
 export default function Layout({ children }) {
   return (
     <div className="min-h-screen bg-cream font-body flex flex-col">
+      <LanguageSelector />
       <main className="flex-1 pb-20 overflow-y-auto">{children}</main>
 
       <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-100 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-50">

@@ -13,6 +13,19 @@ export default {
       colors: {
         cream: '#FFFDF7',
         'cream-dark': '#FFF8E8',
+        sage: '#B8C9A3',
+        'sage-light': '#D4E4C7',
+        rose: '#D4A5A5',
+        'rose-light': '#E8C8C8',
+        sand: '#E8DCC8',
+        'sand-light': '#F2EBE0',
+        charcoal: '#4A4A4A',
+        muted: {
+          blue: '#7BA7BC',
+          terracotta: '#C9886E',
+          gold: '#E8C97A',
+          lavender: '#C9A9D4',
+        },
       },
       animation: {
         'bounce-in': 'bounceIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',

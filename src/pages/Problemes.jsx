@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { problemes } from "../data/problemes";
 import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import {
   playPop,
   playSuccess,
@@ -34,6 +35,7 @@ function MathSymbol({ symbol }) {
 }
 
 export default function Problemes() {
+  const { lang } = useLanguage();
   const [mode, setMode] = useState("explore");
   const [currentIdx, setCurrentIdx] = useState(0);
   const [quizIdx, setQuizIdx] = useState(0);
@@ -46,14 +48,18 @@ export default function Problemes() {
 
   const handleExplore = () => {
     playClick();
-    const ctx = problem.fr.contexte
+    const text = lang === "fr" ? problem.fr : problem.es;
+    const ctx = text.contexte
       .replace("{n1}", problem.n1)
       .replace("{n2}", problem.n2);
-    speak(ctx, "fr");
-    setTimeout(() => speak(problem.fr.question, "fr"), 2000);
+    speak(ctx, lang);
+    setTimeout(() => speak(text.question, lang), 2000);
     setTimeout(() => {
-      const ans = `Réponse : ${problem.n1} ${problem.type === "ajout" ? "plus" : "moins"} ${problem.n2} égale ${problem.answer}`;
-      speak(ans, "fr");
+      const ans =
+        lang === "fr"
+          ? `Réponse : ${problem.n1} ${problem.type === "ajout" ? "plus" : "moins"} ${problem.n2} égale ${problem.answer}`
+          : `Respuesta : ${problem.n1} ${problem.type === "ajout" ? "más" : "menos"} ${problem.n2} es igual a ${problem.answer}`;
+      speak(ans, lang);
     }, 3500);
   };
 
@@ -92,11 +98,13 @@ export default function Problemes() {
       setScore((s) => s + 1);
       playSuccess();
       setShowResult("correct");
-      const fb = quizProblem.feedbackFr
+      const fb = (
+        lang === "fr" ? quizProblem.feedbackFr : quizProblem.feedbackEs
+      )
         .replace("{n1}", quizProblem.n1)
         .replace("{n2}", quizProblem.n2)
         .replace("{answer}", quizProblem.answer);
-      speak(fb, "fr");
+      speak(fb, lang);
     } else {
       playError();
       setShowResult("wrong");

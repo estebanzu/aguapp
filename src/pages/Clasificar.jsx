@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { speak, speakExcited } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import { classifyColors, classifyItems } from "../data/animals";
 import { playPop, playSuccess, playError, playClick } from "../utils/sound";
 import { cargarProgreso, registrarIntento } from "../utils/storage";
@@ -14,6 +15,7 @@ function shuffleArray(arr) {
 }
 
 export default function Clasificar() {
+  const { lang } = useLanguage();
   const [level, setLevel] = useState(0);
   const [placed, setPlaced] = useState({});
   const [dragging, setDragging] = useState(null);
@@ -54,8 +56,10 @@ export default function Clasificar() {
         setScore((prev) => prev + 1);
         registrarIntento(perfil, "classify", item.colorId, true);
         speak(
-          `${item.fr} est ${classifyColors.find((c) => c.id === colorId).fr}`,
-          "fr-FR",
+          lang === "fr"
+            ? `${item.fr} est ${classifyColors.find((c) => c.id === colorId).fr}`
+            : `${item.es} es ${classifyColors.find((c) => c.id === colorId).es}`,
+          lang,
         );
 
         const newPlacedCount = Object.keys({
@@ -73,7 +77,7 @@ export default function Clasificar() {
         registrarIntento(perfil, "classify", item.colorId, false);
         setFeedback({
           type: "error",
-          text: "Essaie encore ! / ¡Inténtalo de nuevo!",
+          text: lang === "fr" ? "Essaie encore !" : "¡Inténtalo de nuevo!",
         });
         setTimeout(() => setFeedback(null), 1500);
       }
@@ -114,12 +118,16 @@ export default function Clasificar() {
           <div className="text-6xl animate-pop">🎉</div>
           <div className="text-center">
             <p className="font-display text-3xl font-black text-green-500">
-              Terminé !
+              {lang === "fr" ? "Terminé !" : "¡Terminado!"}
             </p>
             <p className="font-display text-xl font-bold text-gray-700 mt-2">
               {level + 1 < levels.length
-                ? "Prêt pour la suite ? / ¿Listo para seguir?"
-                : "Champion du tri ! / ¡Campeón del clasificar!"}
+                ? lang === "fr"
+                  ? "Prêt pour la suite ?"
+                  : "¿Listo para seguir?"
+                : lang === "fr"
+                  ? "Champion du tri !"
+                  : "¡Campeón del clasificar!"}
             </p>
           </div>
           <div className="flex gap-3">
@@ -128,7 +136,7 @@ export default function Clasificar() {
                 onClick={nextLevel}
                 className="px-8 py-4 bg-blue-500 text-white font-display font-bold text-lg rounded-2xl hover:bg-blue-600 active:scale-95 transition-all shadow-lg shadow-blue-200"
               >
-                Niveau suivant →
+                {lang === "fr" ? "Niveau suivant →" : "Siguiente nivel →"}
               </button>
             ) : (
               <button
@@ -149,9 +157,8 @@ export default function Clasificar() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-display text-3xl font-black text-gray-800">
-            🎯 Trier
+            🎯 {lang === "fr" ? "Trier" : "Clasificar"}
           </h1>
-          <p className="font-body text-gray-500">Clasificar por color</p>
         </div>
         <span className="font-display text-sm font-bold text-gray-400">
           {placedCount} / {totalItems}
@@ -159,8 +166,9 @@ export default function Clasificar() {
       </div>
 
       <p className="font-body text-gray-500 text-center mb-6">
-        Touche un objet, puis touche la couleur ! / ¡Toca un objeto, luego toca
-        el color!
+        {lang === "fr"
+          ? "Touche un objet, puis touche la couleur !"
+          : "¡Toca un objeto, luego toca el color!"}
       </p>
 
       {/* Color buckets */}
@@ -179,8 +187,7 @@ export default function Clasificar() {
             style={{ backgroundColor: color.hex }}
           >
             <span className="text-2xl">🫧</span>
-            <span>{color.fr}</span>
-            <span className="text-xs opacity-80">{color.es}</span>
+            <span>{lang === "fr" ? color.fr : color.es}</span>
           </button>
         ))}
       </div>
@@ -210,7 +217,7 @@ export default function Clasificar() {
             >
               <span className="text-3xl">{item.emoji}</span>
               <span className="font-display text-xs font-bold text-gray-600">
-                {item.fr}
+                {lang === "fr" ? item.fr : item.es}
               </span>
             </button>
           );

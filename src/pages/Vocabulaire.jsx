@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { vocabThemes, getWeeklyTheme } from "../data/vocabThemes";
 import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import {
   playPop,
   playSuccess,
@@ -10,6 +11,7 @@ import {
 } from "../utils/sound";
 
 export default function Vocabulaire() {
+  const { lang } = useLanguage();
   const [selectedTheme, setSelectedTheme] = useState(null);
   const [currentWordIdx, setCurrentWordIdx] = useState(0);
   const [quizMode, setQuizMode] = useState(false);
@@ -25,8 +27,7 @@ export default function Vocabulaire() {
 
   const handleExplore = () => {
     playPop();
-    speak(word.fr, "fr");
-    setTimeout(() => speak(word.es, "es"), 1000);
+    speak(lang === "fr" ? word.fr : word.es, lang);
   };
 
   const startQuiz = (th) => {
@@ -62,7 +63,7 @@ export default function Vocabulaire() {
       setScore((s) => s + 1);
       playSuccess();
       setShowResult("correct");
-      speak(quizWord.fr, "fr");
+      speak(lang === "fr" ? quizWord.fr : quizWord.es, lang);
     } else {
       playError();
       setShowResult("wrong");
@@ -171,8 +172,7 @@ export default function Vocabulaire() {
                   onClick={() => {
                     setCurrentWordIdx(i);
                     playPop();
-                    speak(w.fr, "fr");
-                    setTimeout(() => speak(w.es, "es"), 1000);
+                    speak(lang === "fr" ? w.fr : w.es, lang);
                   }}
                   className={`flex flex-col items-center p-3 rounded-2xl transition-all ${
                     currentWordIdx === i

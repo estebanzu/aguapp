@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { grandeurs, grandeurQuestions } from "../data/grandeurs";
 import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import {
   playPop,
   playSuccess,
@@ -43,6 +44,7 @@ function SizeBar({ items, highlighted, onSelect }) {
 }
 
 export default function Grandeurs() {
+  const { lang } = useLanguage();
   const [mode, setMode] = useState("explore");
   const [currentCat, setCurrentCat] = useState(0);
   const [quizIdx, setQuizIdx] = useState(0);
@@ -56,9 +58,12 @@ export default function Grandeurs() {
 
   const handleExplore = () => {
     playClick();
-    speak(category.fr, "fr");
+    speak(lang === "fr" ? category.fr : category.es, lang);
     category.items.forEach((item, i) => {
-      setTimeout(() => speak(item.fr, "fr"), 600 * (i + 1));
+      setTimeout(
+        () => speak(lang === "fr" ? item.fr : item.es, lang),
+        600 * (i + 1),
+      );
     });
   };
 
@@ -91,7 +96,7 @@ export default function Grandeurs() {
       setScore((s) => s + 1);
       playSuccess();
       setShowResult("correct");
-      speak(question.feedbackFr, "fr");
+      speak(lang === "fr" ? question.feedbackFr : question.feedbackEs, lang);
     } else {
       playError();
       setShowResult("wrong");
@@ -188,8 +193,7 @@ export default function Grandeurs() {
             highlighted={null}
             onSelect={(item) => {
               playPop();
-              speak(item.fr, "fr");
-              setTimeout(() => speak(item.es, "es"), 800);
+              speak(lang === "fr" ? item.fr : item.es, lang);
             }}
           />
           <button

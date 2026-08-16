@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { speakBilingual, speak } from "../utils/speech";
+import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import { bodyParts, bodyQuestions } from "../data/bodyParts";
 import { playPop, playClick } from "../utils/sound";
 import {
@@ -180,6 +181,7 @@ function BodySVG({ activePart, onPartClick }) {
 }
 
 export default function Cuerpo() {
+  const { lang } = useLanguage();
   const [mode, setMode] = useState("explore");
   const [activePart, setActivePart] = useState(null);
   const [perfil] = useState(() => cargarProgreso());
@@ -200,9 +202,8 @@ export default function Cuerpo() {
     playPop();
     setActivePart(partId);
     registrarIntento(perfil, "bodyParts", partId, true);
-    speakBilingual(part.frComplete, part.esComplete, () => {
-      setTimeout(() => setActivePart(null), 800);
-    });
+    speak(lang === "fr" ? part.frComplete : part.esComplete, lang);
+    setTimeout(() => setActivePart(null), 2000);
   };
 
   const handleRepeat = () => {
@@ -210,7 +211,7 @@ export default function Cuerpo() {
     const part = bodyParts.find((p) => p.id === activePart);
     if (part) {
       playClick();
-      speakBilingual(part.frComplete, part.esComplete);
+      speak(lang === "fr" ? part.frComplete : part.esComplete, lang);
     }
   };
 
@@ -243,9 +244,8 @@ export default function Cuerpo() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-display text-3xl font-black text-gray-800">
-            🧍 Corps
+            🧍 {lang === "fr" ? "Corps" : "Cuerpo"}
           </h1>
-          <p className="font-body text-gray-500">Cuerpo</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -259,7 +259,7 @@ export default function Cuerpo() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            🔍 Explorer
+            🔍 {lang === "fr" ? "Explorer" : "Explorar"}
           </button>
           <button
             onClick={() => {
@@ -272,7 +272,7 @@ export default function Cuerpo() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            ⭐ Jouer
+            ⭐ {lang === "fr" ? "Jouer" : "Jugar"}
           </button>
         </div>
       </div>
@@ -280,10 +280,10 @@ export default function Cuerpo() {
       {showGuide && (
         <div className="mb-4 p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 animate-bounce-in">
           <p className="font-display text-sm font-bold text-blue-700 text-center">
-            👆 Touche une partie du corps !
-          </p>
-          <p className="font-body text-xs text-blue-500 text-center mt-1">
-            Toca una parte del cuerpo
+            👆{" "}
+            {lang === "fr"
+              ? "Touche une partie du corps !"
+              : "¡Toca una parte del cuerpo!"}
           </p>
         </div>
       )}
@@ -313,8 +313,9 @@ export default function Cuerpo() {
               >
                 <span className="text-xl">{partEmojis[part.id]}</span>
                 <div className="flex flex-col items-start">
-                  <span className="text-sm">{part.fr}</span>
-                  <span className="text-xs text-gray-400">{part.es}</span>
+                  <span className="text-sm">
+                    {lang === "fr" ? part.fr : part.es}
+                  </span>
                 </div>
               </button>
             ))}
@@ -326,7 +327,7 @@ export default function Cuerpo() {
                 onClick={handleRepeat}
                 className="px-6 py-3 bg-white rounded-2xl shadow-md border-2 border-gray-100 font-display font-bold text-gray-700 hover:scale-105 active:scale-95 transition-all"
               >
-                🔁 Répète après moi / Repite después de mí
+                🔁 {lang === "fr" ? "Répète après moi" : "Repite después de mí"}
               </button>
             </div>
           )}

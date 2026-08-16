@@ -14,6 +14,7 @@ html {
 body {
   font-family: "Inter", sans-serif;
   background-color: #fffdf7;
+  color: #4a4a4a;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -42,6 +43,6 @@ a,
 
 /* Selection color */
 ::selection {
-  background-color: #fbbf24;
-  color: #1f2937;
+  background-color: #e8c97a;
+  color: #4a4a4a;
 }

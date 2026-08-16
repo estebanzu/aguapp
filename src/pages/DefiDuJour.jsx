@@ -3,6 +3,7 @@ import { colors } from "../data/colors";
 import { numbers } from "../data/numbers";
 import { bodyParts } from "../data/bodyParts";
 import { speak, speakExcited } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import {
   playSuccess,
   playError,
@@ -45,6 +46,7 @@ function getDailyEmoji() {
 }
 
 export default function DefiDuJour() {
+  const { lang } = useLanguage();
   const [showResult, setShowResult] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [completed, setCompleted] = useState(false);
@@ -69,7 +71,12 @@ export default function DefiDuJour() {
     if (correct) {
       playSuccess();
       setShowResult("correct");
-      speakExcited(question.feedbackFr || "Bravo !", "fr");
+      speakExcited(
+        lang === "fr"
+          ? question.feedbackFr || "Bravo !"
+          : question.feedbackEs || "¡Muy bien!",
+        lang,
+      );
       setCompleted(true);
       setStreak((s) => s + 1);
       registrarIntento(question.section, question.id, true);
@@ -94,12 +101,12 @@ export default function DefiDuJour() {
         <div className="max-w-lg mx-auto text-center">
           <div className="text-6xl mb-4 animate-bounceIn">{emoji}</div>
           <h1 className="text-3xl font-bold text-amber-800 mb-4">
-            Défi du Jour
+            {lang === "fr" ? "Défi du Jour" : "Reto del Día"}
           </h1>
           <div className="bg-white rounded-3xl p-6 shadow-lg mb-6">
             <p className="text-5xl mb-4">🏆</p>
             <p className="text-xl font-bold text-amber-700 mb-2">
-              Défi terminé !
+              {lang === "fr" ? "Défi terminé !" : "¡Reto terminado!"}
             </p>
             <p className="text-gray-500">
               Streak : {streak} jour{streak > 1 ? "s" : ""}
@@ -113,7 +120,7 @@ export default function DefiDuJour() {
             }}
             className="w-full py-4 bg-amber-500 text-white rounded-2xl text-xl font-bold hover:bg-amber-600 active:scale-95 transition-all shadow-lg"
           >
-            🔄 Refaire le défi
+            {lang === "fr" ? "🔄 Refaire le défi" : "🔄 Volver a intentar"}
           </button>
         </div>
       </div>
@@ -126,7 +133,7 @@ export default function DefiDuJour() {
         <div className="text-center mb-6">
           <span className="text-4xl">{emoji}</span>
           <h1 className="text-3xl font-bold text-amber-800 mt-2">
-            Défi du Jour
+            {lang === "fr" ? "Défi du Jour" : "Reto del Día"}
           </h1>
           <p className="text-sm text-amber-600">{question.sectionFr}</p>
         </div>

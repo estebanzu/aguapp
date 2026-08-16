@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { speak, speakExcited } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import { animals, countQuestions } from "../data/animals";
 import { shuffleArray } from "../utils/animations";
 import {
@@ -48,6 +49,7 @@ function Confetti() {
 }
 
 export default function Contar() {
+  const { lang } = useLanguage();
   const [questions, setQuestions] = useState([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [counted, setCounted] = useState([]);
@@ -65,9 +67,8 @@ export default function Contar() {
 
   const askQuestion = useCallback(() => {
     if (!current) return;
-    speak(current.questionFr, "fr-FR");
-    setTimeout(() => speak(current.questionEs, "es-ES"), 1200);
-  }, [current]);
+    speak(lang === "fr" ? current.questionFr : current.questionEs, lang);
+  }, [current, lang]);
 
   useEffect(() => {
     if (current && !feedback) {
@@ -93,9 +94,14 @@ export default function Contar() {
       playSuccess();
       registrarIntento(perfil, "count", current.targetAnimal, true);
       setScore((prev) => prev + 1);
-      setFeedback({ type: "correct", text: current.feedbackFr });
-      speakExcited(current.feedbackFr, "fr-FR");
-      setTimeout(() => speakExcited(current.feedbackEs, "es-ES"), 1000);
+      setFeedback({
+        type: "correct",
+        text: lang === "fr" ? current.feedbackFr : current.feedbackEs,
+      });
+      speakExcited(
+        lang === "fr" ? current.feedbackFr : current.feedbackEs,
+        lang,
+      );
 
       setTimeout(() => {
         if (currentIdx + 1 < questions.length) {
@@ -114,11 +120,14 @@ export default function Contar() {
       setFeedback({
         type: "error",
         text:
-          counted.length < current.count
-            ? `Il y en a ${current.count} ! Comptes encore ! / ¡Hay ${current.count}! ¡Cuenta otra vez!`
-            : `Non, il y en a ${current.count} ! / ¡No, hay ${current.count}!`,
+          lang === "fr"
+            ? `Il y en a ${current.count} ! Comptes encore !`
+            : `¡Hay ${current.count}! ¡Cuenta otra vez!`,
       });
-      speak(`Il y en a ${current.count}`, "fr-FR");
+      speak(
+        lang === "fr" ? `Il y en a ${current.count}` : `Hay ${current.count}`,
+        lang,
+      );
       setTimeout(() => {
         setCounted([]);
         setFeedback(null);
@@ -205,15 +214,14 @@ export default function Contar() {
 
       <div className="bg-white rounded-3xl shadow-lg px-6 py-5 text-center max-w-sm w-full border-2 border-yellow-200 mb-6">
         <p className="font-display text-lg font-bold text-gray-700">
-          {current.questionFr}
-        </p>
-        <p className="font-body text-sm text-gray-500 mt-1">
-          {current.questionEs}
+          {lang === "fr" ? current.questionFr : current.questionEs}
         </p>
       </div>
 
       <p className="font-body text-gray-500 text-center mb-4">
-        Touche les {targetAnimalData?.fr?.toLowerCase()}s pour les compter !
+        {lang === "fr"
+          ? `Touche les ${targetAnimalData?.fr?.toLowerCase()}s pour les compter !`
+          : `¡Toca los ${targetAnimalData?.es?.toLowerCase()}s para contarlos!`}
       </p>
 
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-w-md mx-auto mb-6">
@@ -233,7 +241,7 @@ export default function Contar() {
             >
               <span className="text-3xl">{animal.emoji}</span>
               <span className="font-display text-[10px] font-bold text-gray-500">
-                {animal.fr}
+                {lang === "fr" ? animal.fr : animal.es}
               </span>
             </button>
           );
@@ -257,7 +265,7 @@ export default function Contar() {
               : "bg-gray-200 text-gray-400 cursor-not-allowed"
           }`}
         >
-          ✅ Valider
+          ✅ {lang === "fr" ? "Valider" : "Validar"}
         </button>
       </div>
 

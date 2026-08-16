@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { speakBilingual } from "../utils/speech";
+import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import { formas, formaQuestions } from "../data/formas";
 import { playPop, playClick } from "../utils/sound";
 import QuizMode from "../components/QuizMode";
@@ -92,15 +93,15 @@ function FormaSVG({ forma, size = 80, active = false }) {
 }
 
 export default function Formas() {
+  const { lang } = useLanguage();
   const [mode, setMode] = useState("explore");
   const [activeForma, setActiveForma] = useState(null);
 
   const handleFormaTap = (forma) => {
     playPop();
     setActiveForma(forma.id);
-    speakBilingual(forma.frComplete, forma.esComplete, () => {
-      setTimeout(() => setActiveForma(null), 500);
-    });
+    speak(lang === "fr" ? forma.frComplete : forma.esComplete, lang);
+    setTimeout(() => setActiveForma(null), 2000);
   };
 
   const handleRepeat = () => {
@@ -108,7 +109,7 @@ export default function Formas() {
     const forma = formas.find((f) => f.id === activeForma);
     if (forma) {
       playClick();
-      speakBilingual(forma.frComplete, forma.esComplete);
+      speak(lang === "fr" ? forma.frComplete : forma.esComplete, lang);
     }
   };
 
@@ -140,9 +141,8 @@ export default function Formas() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-display text-3xl font-black text-gray-800">
-            📐 Formes
+            📐 {lang === "fr" ? "Formes" : "Formas"}
           </h1>
-          <p className="font-body text-gray-500">Formas</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -156,7 +156,7 @@ export default function Formas() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            🔍 Explorer
+            🔍 {lang === "fr" ? "Explorer" : "Explorar"}
           </button>
           <button
             onClick={() => {
@@ -169,7 +169,7 @@ export default function Formas() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            ⭐ Jouer
+            ⭐ {lang === "fr" ? "Jouer" : "Jugar"}
           </button>
         </div>
       </div>
@@ -194,10 +194,7 @@ export default function Formas() {
                   active={activeForma === forma.id}
                 />
                 <span className="font-display font-bold text-gray-700">
-                  {forma.fr}
-                </span>
-                <span className="font-body text-xs text-gray-400">
-                  {forma.es}
+                  {lang === "fr" ? forma.fr : forma.es}
                 </span>
               </button>
             ))}
@@ -209,7 +206,7 @@ export default function Formas() {
                 onClick={handleRepeat}
                 className="px-6 py-3 bg-white rounded-2xl shadow-md border-2 border-gray-100 font-display font-bold text-gray-700 hover:scale-105 active:scale-95 transition-all"
               >
-                🔁 Répète après moi
+                🔁 {lang === "fr" ? "Répète après moi" : "Repite después de mí"}
               </button>
             </div>
           )}

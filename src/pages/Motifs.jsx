@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motifs, motifColors } from "../data/motifs";
 import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import {
   playPop,
   playSuccess,
@@ -58,6 +59,7 @@ function ShapeCell({ colorKey, shape, size = 48, delay = 0 }) {
 }
 
 export default function Motifs() {
+  const { lang } = useLanguage();
   const [currentIdx, setCurrentIdx] = useState(0);
   const [quizMode, setQuizMode] = useState(false);
   const [quizIdx, setQuizIdx] = useState(0);
@@ -71,9 +73,7 @@ export default function Motifs() {
 
   const handleExplore = () => {
     playClick();
-    const frText = motif.fr;
-    speak(frText, "fr");
-    setTimeout(() => speak(motif.es, "es"), 1200);
+    speak(lang === "fr" ? motif.fr : motif.es, lang);
   };
 
   const startQuiz = () => {
@@ -108,7 +108,7 @@ export default function Motifs() {
       setScore((s) => s + 1);
       playSuccess();
       setShowResult("correct");
-      speak(currentQuiz.fr, "fr");
+      speak(lang === "fr" ? currentQuiz.fr : currentQuiz.es, lang);
     } else {
       playError();
       setShowResult("wrong");

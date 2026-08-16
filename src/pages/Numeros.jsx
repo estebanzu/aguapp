@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { speakBilingual, speak } from "../utils/speech";
+import { speak } from "../utils/speech";
+import { useLanguage } from "../context/LanguageContext";
 import { numbers, numberQuestions } from "../data/numbers";
 import { playPop, playClick } from "../utils/sound";
 import {
@@ -20,11 +21,7 @@ function DotGrid({ count, isActive }) {
       {[...Array(count)].map((_, i) => (
         <div
           key={i}
-          className={`
-            w-3 h-3 rounded-full
-            transition-all duration-300
-            ${isActive ? "bg-yellow-400 animate-pop" : "bg-gray-300"}
-          `}
+          className={`w-3 h-3 rounded-full transition-all duration-300 ${isActive ? "bg-yellow-400 animate-pop" : "bg-gray-300"}`}
           style={{ animationDelay: `${i * 0.05}s` }}
         />
       ))}
@@ -33,6 +30,7 @@ function DotGrid({ count, isActive }) {
 }
 
 export default function Numeros() {
+  const { lang } = useLanguage();
   const [mode, setMode] = useState("explore");
   const [activeNumber, setActiveNumber] = useState(null);
   const [perfil] = useState(() => cargarProgreso());
@@ -51,9 +49,8 @@ export default function Numeros() {
     playPop();
     setActiveNumber(number.num);
     registrarIntento(perfil, "numbers", String(number.num), true);
-    speakBilingual(number.fr, number.es, () => {
-      setTimeout(() => setActiveNumber(null), 500);
-    });
+    speak(lang === "fr" ? number.fr : number.es, lang);
+    setTimeout(() => setActiveNumber(null), 1500);
   };
 
   const handleRepeat = () => {
@@ -61,7 +58,7 @@ export default function Numeros() {
     const number = numbers.find((n) => n.num === activeNumber);
     if (number) {
       playClick();
-      speakBilingual(number.fr, number.es);
+      speak(lang === "fr" ? number.fr : number.es, lang);
     }
   };
 
@@ -72,18 +69,19 @@ export default function Numeros() {
     <button
       onClick={onSelect}
       disabled={disabled}
-      className={`
-        w-full aspect-square rounded-3xl flex flex-col items-center justify-center gap-2
-        bg-white font-display font-black text-4xl text-gray-800
-        transition-all duration-200 shadow-lg border-3 border-gray-100
-        ${isSelectedWrong ? "animate-shake opacity-50 border-red-300" : ""}
-        ${isCorrect ? "animate-pop ring-4 ring-yellow-400 ring-offset-2 border-yellow-300 bg-yellow-50" : ""}
-        ${disabled ? "cursor-not-allowed" : "active:scale-95 hover:scale-105 hover:shadow-xl"}
-      `}
+      className={`w-full aspect-square rounded-3xl flex flex-col items-center justify-center gap-2 bg-white font-display font-black text-4xl text-gray-800 transition-all duration-200 shadow-lg border-3 border-gray-100 ${
+        isSelectedWrong ? "animate-shake opacity-50 border-red-300" : ""
+      } ${isCorrect ? "animate-pop ring-4 ring-yellow-400 ring-offset-2 border-yellow-300 bg-yellow-50" : ""} ${
+        disabled
+          ? "cursor-not-allowed"
+          : "active:scale-95 hover:scale-105 hover:shadow-xl"
+      }`}
     >
       <span>{number.num}</span>
       <DotGrid count={number.dots} isActive={false} />
-      <span className="text-xs font-bold text-gray-500">{number.fr}</span>
+      <span className="text-xs font-bold text-gray-500">
+        {lang === "fr" ? number.fr : number.es}
+      </span>
     </button>
   );
 
@@ -92,9 +90,8 @@ export default function Numeros() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="font-display text-3xl font-black text-gray-800">
-            🔢 Nombres
+            🔢 {lang === "fr" ? "Nombres" : "Números"}
           </h1>
-          <p className="font-body text-gray-500">Números</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -108,7 +105,7 @@ export default function Numeros() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            🔍 Explorer
+            🔍 {lang === "fr" ? "Explorer" : "Explorar"}
           </button>
           <button
             onClick={() => {
@@ -121,7 +118,7 @@ export default function Numeros() {
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
-            ⭐ Jouer
+            ⭐ {lang === "fr" ? "Jouer" : "Jugar"}
           </button>
         </div>
       </div>
@@ -129,10 +126,10 @@ export default function Numeros() {
       {showGuide && (
         <div className="mb-4 p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 animate-bounce-in">
           <p className="font-display text-sm font-bold text-blue-700 text-center">
-            👆 Touche un nombre pour l'écouter !
-          </p>
-          <p className="font-body text-xs text-blue-500 text-center mt-1">
-            Toca un número para escucharlo
+            👆{" "}
+            {lang === "fr"
+              ? "Touche un nombre pour l'écouter !"
+              : "¡Toca un número para escucharlo!"}
           </p>
         </div>
       )}
@@ -144,25 +141,20 @@ export default function Numeros() {
               <button
                 key={number.num}
                 onClick={() => handleNumberTap(number)}
-                className={`
-                  aspect-square rounded-3xl flex flex-col items-center justify-center gap-2
-                  bg-white font-display font-black text-4xl text-gray-800
-                  transition-all duration-300 shadow-lg border-2 border-gray-100
-                  hover:scale-105 active:scale-95
-                  ${activeNumber === number.num ? "scale-110 ring-4 ring-yellow-400 ring-offset-4 animate-glow border-yellow-300" : ""}
-                `}
+                className={`aspect-square rounded-3xl flex flex-col items-center justify-center gap-2 bg-white font-display font-black text-4xl text-gray-800 transition-all duration-300 shadow-lg border-2 border-gray-100 hover:scale-105 active:scale-95 ${
+                  activeNumber === number.num
+                    ? "scale-110 ring-4 ring-yellow-400 ring-offset-4 animate-glow border-yellow-300"
+                    : ""
+                }`}
               >
                 <span className="text-5xl">{number.num}</span>
                 <DotGrid
                   count={number.dots}
                   isActive={activeNumber === number.num}
                 />
-                <div className="flex flex-col items-center">
-                  <span className="text-sm font-bold text-gray-600">
-                    {number.fr}
-                  </span>
-                  <span className="text-xs text-gray-400">{number.es}</span>
-                </div>
+                <span className="text-sm font-bold text-gray-600">
+                  {lang === "fr" ? number.fr : number.es}
+                </span>
               </button>
             ))}
           </div>
@@ -173,7 +165,7 @@ export default function Numeros() {
                 onClick={handleRepeat}
                 className="px-6 py-3 bg-white rounded-2xl shadow-md border-2 border-gray-100 font-display font-bold text-gray-700 hover:scale-105 active:scale-95 transition-all"
               >
-                🔁 Répète après moi / Repite después de mí
+                🔁 {lang === "fr" ? "Répète après moi" : "Repite después de mí"}
               </button>
             </div>
           )}
@@ -185,10 +177,10 @@ export default function Numeros() {
             options: (() => {
               const correct = numbers.find((n) => n.num === q.correctNum);
               const others = numbers.filter((n) => n.num !== q.correctNum);
-              const shuffled = others
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 3);
-              return [...shuffled, correct].sort(() => Math.random() - 0.5);
+              return [
+                ...others.sort(() => Math.random() - 0.5).slice(0, 3),
+                correct,
+              ].sort(() => Math.random() - 0.5);
             })(),
           }))}
           renderOption={renderNumberOption}
