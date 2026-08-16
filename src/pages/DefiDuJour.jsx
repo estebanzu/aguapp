@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { colors } from "../data/colors";
-import { numbers } from "../data/numbers";
-import { bodyParts } from "../data/bodyParts";
+import { colorQuestions } from "../data/colors";
+import { numberQuestions } from "../data/numbers";
+import { bodyQuestions } from "../data/bodyParts";
 import { speak, speakExcited } from "../utils/speech";
 import { useLanguage } from "../context/LanguageContext";
 import {
@@ -13,17 +13,17 @@ import {
 import { registrarIntento, cargarProgreso } from "../utils/storage";
 
 const allQuestions = [
-  ...colors.quizQuestions.map((q) => ({
+  ...colorQuestions.map((q) => ({
     ...q,
     section: "colores",
     sectionFr: "Les Couleurs",
   })),
-  ...numbers.quizQuestions.map((q) => ({
+  ...numberQuestions.map((q) => ({
     ...q,
     section: "numeros",
     sectionFr: "Les Nombres",
   })),
-  ...bodyParts.quizQuestions.map((q) => ({
+  ...bodyQuestions.map((q) => ({
     ...q,
     section: "cuerpo",
     sectionFr: "Le Corps",
@@ -79,15 +79,15 @@ export default function DefiDuJour() {
       );
       setCompleted(true);
       setStreak((s) => s + 1);
-      registrarIntento(question.section, question.id, true);
       const progress = cargarProgreso();
+      registrarIntento(progress, question.section, question.id, true);
       progress.defiDate = new Date().toISOString().slice(0, 10);
       progress.defiStreak = (progress.defiStreak || 0) + 1;
       localStorage.setItem("petit-monde-progress", JSON.stringify(progress));
     } else {
       playError();
       setShowResult("wrong");
-      registrarIntento(question.section, question.id, false);
+      registrarIntento(cargarProgreso(), question.section, question.id, false);
       setTimeout(() => {
         setShowResult(null);
         setSelectedOption(null);
